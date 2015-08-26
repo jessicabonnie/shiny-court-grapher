@@ -18,5 +18,5 @@ emags$monthAbbrev <- factor(substr(month.name[emags$Month],1,3),levels=substr(c(
 # Create a uniq identifier for the month (may or may not be needed)
 emags$month_id <- factor(paste(emags$FYear, str_pad(as.character(emags$Month), 2, side="left", pad="0"), sep="-"))
 
-#Force FIPs into the 
+#Force FIPs into the correct format
 emags$FIPS <- str_pad(as.character(emags$Fips.Code),3,side="left",pad="0")
