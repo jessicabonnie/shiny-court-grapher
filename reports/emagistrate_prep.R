@@ -13,7 +13,7 @@ emags[emags$Month == 1|emags$Month==2| emags$Month==3, ]$FQtr <- 3
 emags[emags$Month == 4|emags$Month==5| emags$Month==6, ]$FQtr <- 4
 
 # Create abbreviated month column, factored in accordance with fiscal calendar
-emags$monthAbbrev <- factor(substr(month.name[emags$Month],1,3),levels=substr(c(month.name[7:12],month.name[1:6]),1,3))
+emags$FYMonthAbbrev <- factor(substr(month.name[emags$Month],1,3),levels=substr(c(month.name[7:12],month.name[1:6]),1,3))
 
 # Create a uniq identifier for the month (may or may not be needed)
 emags$month_id <- factor(paste(emags$FYear, str_pad(as.character(emags$Month), 2, side="left", pad="0"), sep="-"))
