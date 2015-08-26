@@ -44,12 +44,20 @@ ECOJmonthly2 <-
   group_by(ECOJ, month_id, FYear, Month) %>%
   summarise(count = sum(Process.Count))
 
-ECOJmonthly2$monthGraph <- factor(ECOJmonthly2$Month, levels=c("07", "08", "09", "10", "11", "12", "01", "02", "03", "04", "05", "06"))
+#ECOJmonthly2$monthGraph <- factor(ECOJmonthly2$Month, levels=c("07", "08", "09", "10", "11", "12", "01", "02", "03", "04", "05", "06"))
+
+ECOJmonthly2$YearCat <- cut(as.numeric(ECOJmonthly2$FYear), breaks=c(2009,2010, 2011, 2013, 2014,2015), labels=c("FY2010","FY2011","FY2012/FY2013", "FY2014", "FY2015"))
+
+ECOJmonthly3 <- ECOJmonthly2 %>%
+  group_by(YearCat, Month) %>%
+  summarise(count = mean(count)) 
+
+ECOJmonthly3$monthGraph <- factor(ECOJmonthly3$Month, levels=c("07", "08", "09", "10", "11", "12", "01", "02", "03", "04", "05", "06"))
 
 p <- 
-  ggplot(ECOJmonthly2, aes(factor(monthGraph), count, group=factor(FYear), color=factor(FYear))) + 
+  ggplot(ECOJmonthly3, aes(factor(monthGraph), count, group=factor(YearCat), color=factor(YearCat))) + 
   geom_line() +
   ylab("Number of ECOs") +
   xlab("Month")
 
-p + ylim(0,max(ECOJmonthly2$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Year") + scale_shape_discrete(name="Year") + ggtitle("Monthly Frequency of ECOs Issued to Minors, FY2010-FY2015")
+p + ylim(0,max(ECOJmonthly2$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(YearCat)), size=3) + scale_colour_discrete(name  ="Year") + scale_shape_discrete(name="Year") + ggtitle("Monthly Frequency of ECOs Issued to Minors, FY2010-FY2015")
