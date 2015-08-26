@@ -5,7 +5,8 @@
 *.csv
 *.pdf
 data/
-
+*.Rmd
+!QtrlyReportTemplateAdults.Rmd
 # R Project Related #
 #####################
 # History files
