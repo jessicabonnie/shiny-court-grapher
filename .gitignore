@@ -54,13 +54,11 @@ vignettes/*.pdf
 *.rar
 *.tar
 *.zip
-
 # Logs and databases #
 ######################
 *.log
 *.sql
 *.sqlite
-
 # OS generated files #
 ######################
 .DS_Store
@@ -70,12 +68,10 @@ vignettes/*.pdf
 .Trashes
 ehthumbs.db
 Thumbs.db
-
 # Text editing backups #
 ########################
 *.bak
 *.swp
 ~*
 *#
-
-
+.Rproj.user
