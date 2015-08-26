@@ -1,5 +1,5 @@
 # read in emagistrate data
-emags <- read.csv("CopyOfECOTDOFips08_14.txt")
+emags <- read.csv("data/ECOTDOFips08_14.txt")
 
 emags$FYear<- emags$Year
 emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
@@ -46,12 +46,10 @@ ECOJmonthly2 <-
 
 ECOJmonthly2$monthGraph <- factor(ECOJmonthly2$Month, levels=c("07", "08", "09", "10", "11", "12", "01", "02", "03", "04", "05", "06"))
 
-
 p <- 
   ggplot(ECOJmonthly2, aes(factor(monthGraph), count, group=factor(FYear), color=factor(FYear))) + 
   geom_line() +
   ylab("Number of ECOs") +
   xlab("Month")
-p
 
-p + ylim(0,max(ECOJmonthly2$count)) + geom_line(size=1.2) + scale_colour_discrete(name  ="Year")+ ggtitle("Monthly Frequency of ECOs Issued to Minors, FY2009-FY2015")
+p + ylim(0,max(ECOJmonthly2$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Year") + scale_shape_discrete(name="Year") + ggtitle("Monthly Frequency of ECOs Issued to Minors, FY2010-FY2015")
