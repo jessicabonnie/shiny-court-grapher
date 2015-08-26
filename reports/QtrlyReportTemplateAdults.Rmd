@@ -1,0 +1,194 @@
+---
+title: 'Annual Statistical Report: Civil Commitment Procedures in Virginia'
+author: "AA Allen, JK Bonnie"
+date: "August 26, 2015"
+output: pdf_document
+---
+
+
+
+##ECOs
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+emags <- read.csv("ECOTDOFips08_14.txt")
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(pander)
+library(ggplot2)
+
+emags$FYear<- emags$Year
+emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
+
+emagsECOAnnual <- 
+        emags %>%
+        filter(Type=="ECO", FYear>2007) %>%
+        group_by(FYear) %>%
+        summarise(count = sum(Process.Count)) 
+
+pander(emagsECOAnnual, caption = "Annual Frequency of ECOs Issued to Adults, FY2010-FY2015")
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ECO <- 
+  emags %>%
+  filter(Type=="ECO", FYear>2007)
+
+ECOyearly <- 
+  group_by(ECO, FYear) %>%
+  summarise(count = sum(Process.Count))
+
+p <-  ggplot(ECOyearly, aes(x=FYear, y=count)) + geom_line() + geom_point() + geom_text(size=3, aes(label=count, hjust=0.5, vjust=2)) + ylab("Number of ECOs") +  xlab("Fiscal Year")
+
+p + ylim(0,max(ECOyearly$count)) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of ECOs Issued to Adults, FY2010-FY2015")
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+emagsECOMonthly <- 
+        emags %>%
+        filter(Type=="ECO", FYear>2007) %>%
+        group_by(FYear, Month) %>%
+        summarise(count = sum(Process.Count)) %>%
+        spread(FYear, count) %>%
+        mutate(Month = factor(month.name)) 
+
+pander(emagsECOMonthly, caption = "Monthly Frequency of ECOs Issued to Adults, FY2010-FY2015")
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ECO <- 
+  emags %>%
+  filter(Type=="ECO", FYear>2007)
+
+ECO$Month <- str_pad(as.character(ECO$Month), 2, side="left", pad="0")
+
+ECO$month_id <- factor(paste(ECO$FYear, as.character(ECO$Month), sep=" "))
+
+ECOmonthly2 <- 
+  group_by(ECO, month_id, FYear, Month) %>%
+  summarise(count = sum(Process.Count))
+
+ECOmonthly2$monthGraph <- factor(ECOmonthly2$Month, levels=c("07", "08", "09", "10", "11", "12", "01", "02", "03", "04", "05", "06"))
+
+
+p <- 
+  ggplot(ECOmonthly2, aes(factor(monthGraph), count, group=factor(FYear), color=factor(FYear))) + 
+  geom_line() +
+  ylab("Number of ECOs") +
+  xlab("Month")
+
+p + ylim(0,max(ECOmonthly2$count)) + geom_line(size=1.2) + scale_colour_discrete(name  ="Year")+ ggtitle("Monthly Frequency of ECOs Issued to Adults, FY2010-FY2015")
+```
+
+
+
+
+##TDOs
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+emags <- read.csv("ECOTDOFips08_14.txt")
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(pander)
+library(ggplot2)
+
+emags$FYear<- emags$Year
+emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
+
+emagsTDOAnnual <- 
+        emags %>%
+        filter(Type=="TDO", FYear>2007) %>%
+        group_by(FYear) %>%
+        summarise(count = sum(Process.Count)) 
+
+pander(emagsTDOAnnual, caption = "Annual Frequency of TDOs Issued to Adults, FY2010-FY2015")
+
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+TDO <- 
+  emags %>%
+  filter(Type=="TDO", FYear>2007)
+
+TDO$Month <- str_pad(as.character(TDO$Month), 2, side="left", pad="0")
+
+
+TDO$month_id <- factor(paste(TDO$FYear, as.character(TDO$Month), sep=" "))
+
+TDOyearly <- 
+  group_by(TDO, FYear) %>%
+  summarise(count = sum(Process.Count))
+
+p <-  ggplot(TDOyearly, aes(x=FYear, y=count)) + geom_line() + geom_point() + geom_text(size=3, aes(label=count, hjust=0.5, vjust=2.5)) + ylab("Number of TDOs") +  xlab("Fiscal Year")
+
+p + ylim(1250,max(TDOyearly$count)) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of TDOs Issued to Adults, FY2010-FY2015")
+
+
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+emags <- read.csv("ECOTDOFips08_14.txt")
+
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(pander)
+library(ggplot2)
+
+emags$FYear<- emags$Year
+emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
+
+emags2 <- 
+        emags %>%
+        filter(Type=="TDO", FYear>2007) %>%
+        group_by(FYear, Month) %>%
+        summarise(count = sum(Process.Count)) %>%
+        spread(FYear, count) %>%
+        mutate(Month = factor(month.name)) 
+
+pander(emags2, caption = "Monthly Frequency of TDOs Issued to Minors, FY2010-FY2015")
+
+```
+
+
+```{r, echo=FALSE}
+
+emags$FYear<- emags$Year
+emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
+
+TDO <- 
+  emags %>%
+  filter(Type=="TDO", FYear>2007)
+
+TDO$Month <- str_pad(as.character(TDO$Month), 2, side="left", pad="0")
+
+
+TDO$month_id <- factor(paste(TDO$FYear, as.character(TDO$Month), sep=" "))
+
+TDOmonthly2 <- 
+  group_by(TDO, month_id, FYear, Month) %>%
+  summarise(count = sum(Process.Count))
+
+TDOmonthly2$monthGraph <- factor(TDOmonthly2$Month, levels=c("07", "08", "09", "10", "11", "12", "01", "02", "03", "04", "05", "06"))
+
+p <- 
+  ggplot(TDOmonthly2, aes(factor(monthGraph), count, group=factor(FYear), color=factor(FYear))) + 
+  geom_line() +
+  ylab("Number of TDOs") +
+  xlab("Month")
+
+p + ylim(0,max(TDOmonthly2$count)) + geom_line(size=1.2) + 
+  scale_colour_discrete(name  ="Fiscal Year") +
+  ggtitle("Monthly Frequency of TDOs Issued to Adults, FY2010-FY2015")
+```
+
+##All Adult Commitment Hearings
+
+##Involuntary Commitment Orders
+
+##Alternative Transportation Orders
