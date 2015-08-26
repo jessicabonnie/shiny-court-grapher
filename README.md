@@ -18,6 +18,7 @@
 
 ### Programs ###
 R version >= 3.2.2
+
 ### Packages ###
 * dplyr
 * tidyr
@@ -26,4 +27,6 @@ R version >= 3.2.2
 * knitr
 * pander
 * maptools
-* 
+* gpclib
+* mapproj
+* rgdal
