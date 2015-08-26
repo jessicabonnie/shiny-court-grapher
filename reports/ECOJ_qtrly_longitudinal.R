@@ -1,4 +1,4 @@
-emags <- read.csv("ECOTDOFips08_14.txt")
+emags <- read.csv("data/ECOTDOFips08_14.txt")
 library(dplyr)
 library(stringr)
 library(tidyr)
@@ -42,4 +42,3 @@ p
 p + ylim(0,max(ECOJquarterlyLong$count)) + geom_line(size=1.2) + ggtitle("ECO Trends (Minors Only), FY2010-FY2015") +
   scale_x_discrete(labels=c("10-1", "10-2", "10-3", "10-4", "11-1", "11-2", "11-3", "11-4",
                             "12-1", "12-2", "12-3", "12-4", "13-1", "13-2", "13-3", "13-4",
-                            "14-1", "14-2", "14-3", "14-4", "15-1", "15-2","15-3", "15-4"))
