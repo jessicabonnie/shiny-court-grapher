@@ -2,7 +2,7 @@ library(dplyr)
 library(tidyr)
 library(pander)
 
-ATO <- read.csv("data/ATO with TimeInfo.txt")
+ATO <- read.csv("data/ATO with TimeInfo_8_26_15.txt")
 
 ATO<-filter(ATO, Form=="ECOJ"| Form=="TDOJ")
 
