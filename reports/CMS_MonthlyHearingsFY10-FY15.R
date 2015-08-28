@@ -1,14 +1,25 @@
-CMS <- read.csv("data/CMSPLUS_8_27.txt")
+CMS <- read.csv("data/CMS_8_26.txt")
 
 # load all necessary packages
 library(dplyr)
 library(ggthemes)
 library(pander)
 library(stringr)
+library(lubridate)
+
+#Create Month, Year
+CMS$HEAR.DATE <- as.Date(CMS$HEAR.DATE, format = '%m/%d/%Y')
+CMS$Year<- year(CMS$HEAR.DATE)
+CMS$Month <- month(CMS$HEAR.DATE)
+
+#Filter for no errors (keep or no?)
+CMS<- filter(CMS, Error< 1|is.na(Error))
 
 # Create Fiscal Year Variable
 CMS$FYear<- CMS$Year
 CMS[CMS$Month > 6, ]$FYear <- as.numeric(CMS[CMS$Month > 6, ]$Year) + 1
+
+
 
 #Create Fiscal Quarter Variable
 CMS$FQtr <- CMS$Month
@@ -28,9 +39,8 @@ CMS$FIPS <- str_pad(as.character(CMS$FIPS),3,side="left",pad="0")
 
 
 #NOTE: ATTEMPT TO MAKE VARIABLE FOR RECOMMITMENT VS INITIAL HEARINGS. paycode 41 & 46 = recommitment. what is 21?
-CMS$initial[CMS$PAY.CD=="41"|CMS$PAY.CD=="46"] <- "0"
-CMS$initial[CMS$PAY.CD=="21"] <- "1"
-CMS$initial[is.na(CMS$PAY.CD)]<- "1"
+CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, TRUE, FALSE)
+CMS$initial [is.na(CMS$PAY.CD)] <- FALSE
 
 #creating a chart of monthly hearing counts by FY. Note, for this dataset I need to exclude july and august of FY09
 #need to also group by recommitment vs. initial.

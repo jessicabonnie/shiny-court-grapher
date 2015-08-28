@@ -1,5 +1,15 @@
 library(stringr)
-CMS <- read.csv("data/CMSPLUS_8_27.txt")
+library(lubridate
+        )
+CMS <- read.csv("../data/CMS_8_26.txt")
+
+#Create Month, Year
+CMS$HEAR.DATE <- as.Date(CMS$HEAR.DATE, format = '%m/%d/%Y')
+CMS$Year<- year(CMS$HEAR.DATE)
+CMS$Month <- month(CMS$HEAR.DATE)
+
+#Filter for no errors (keep or no?)
+CMS<- filter(CMS, Error< 1|is.na(Error))
 
 # Create Fiscal Year Variable
 CMS$FYear<- CMS$Year
