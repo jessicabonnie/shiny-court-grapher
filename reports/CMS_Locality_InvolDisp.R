@@ -1,5 +1,6 @@
 library(stringr)
 library(lubridate)
+library(pander)
 CMS <- read.csv("data/CMS_8_26.txt")
 FIPS_Codes <- read.csv("data/FIPS_R.csv")
 
@@ -32,7 +33,7 @@ CMS$FYMonthAbbrev <- factor(substr(month.name[CMS$Month],1,3),levels=substr(c(mo
 # Create a uniq identifier for the month (may or may not be needed)
 CMS$month_id <- factor(paste(CMS$FYear, str_pad(as.character(CMS$Month), 2, side="left", pad="0"), sep="-"))
 
-CMS$FIPS <- substr(CMS$CASE.NUMBER, 1, 3)
+CMS$FIPS <- substr(CMS$CASE.NUMBER, 1, 4)
 #Create FIPS names
 CMS <- merge(CMS, FIPS_Codes, by = c("FIPS"), all.x = TRUE)
 CMS <- CMS[,!names(CMS) %in% c("SHORT_FIPS","COURT")]
@@ -55,6 +56,16 @@ CMS_MOT[CMS_MOT$HEAR.RSLT=="MO"  & CMS_MOT$initial ,]$MOT_TYPE <- "TYPE4"
 #CMS_MOT <- as.data.frame(CMS_MOT)
 CMS_MOT <- select(CMS_MOT,-initial,- MOT,- HEAR.RSLT)
 CMS_MOT <- t(CMS_MOT)
-CMS_MOT <- as.data.frame(CMS_MOT,colnames)
-colnames(CMS_MOT) <- CMS_MOT[49,]
+
+
+# Trying to give MOT type column names
+#CMS_MOT <- as.data.frame(CMS_MOT,colnames)
+#colnames(CMS_MOT) <- CMS_MOT[49,]
+
+CMS_MOT <- as.data.frame(CMS_MOT)
+
+CMS_MOT<- rename(CMS_MOT, Stepdown_Recommitment_Discharge=V1, Stepdown_Initial_Discharge=V2, Stepdown_New_Hearing=V3, Direct=V4)
+CMS_MOT <- CMS_MOT[-50,]
+pander(CMS_MOT, caption= "MOT Types by Locality")
+
 
