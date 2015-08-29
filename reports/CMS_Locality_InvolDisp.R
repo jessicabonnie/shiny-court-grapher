@@ -1,11 +1,7 @@
 library(stringr)
 library(lubridate)
-library(dplyr)
-CMS <- read.csv("../data/CMS_8_26.txt")
+CMS <- read.csv("data/CMS_8_26.txt")
 FIPS_Codes <- read.csv("data/FIPS_R.csv")
-
-#remove extraneous columns
-CMS<- select(CMS, -ErrorType, -Notes, -CorrectionDate, -Received, -FilingDate, -ID)
 
 CMS$HEAR.RSLT <- str_trim(CMS$HEAR.RSLT)
 CMS$CASE.TYP <- str_trim(CMS$CASE.TYP)
@@ -36,14 +32,29 @@ CMS$FYMonthAbbrev <- factor(substr(month.name[CMS$Month],1,3),levels=substr(c(mo
 # Create a uniq identifier for the month (may or may not be needed)
 CMS$month_id <- factor(paste(CMS$FYear, str_pad(as.character(CMS$Month), 2, side="left", pad="0"), sep="-"))
 
-CMS$FIPS <- substr(CMS$CASE.NUMBER, 1, 4)
-
-
-
+CMS$FIPS <- substr(CMS$CASE.NUMBER, 1, 3)
 #Create FIPS names
 CMS <- merge(CMS, FIPS_Codes, by = c("FIPS"), all.x = TRUE)
 CMS <- CMS[,!names(CMS) %in% c("SHORT_FIPS","COURT")]
 names(CMS)[names(CMS)=="NAME"] <- "Locality"
 
+CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
+CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
 
+CMS_MOT <- filter(CMS, CASE.TYP =="MC", HEAR.RSLT %in% c("MO", "I"))%>%
+  group_by(Locality,HEAR.RSLT, MOT, initial)%>%
+  filter((HEAR.RSLT == "I" & (MOT == "Y") ) | HEAR.RSLT == "MO" ) %>%
+  summarise(count = n()) %>%
+  spread(Locality,count)
+
+CMS_MOT$MOT_TYPE <- "X"
+CMS_MOT[CMS_MOT$HEAR.RSLT=="I" & CMS_MOT$MOT=="Y" & !CMS_MOT$initial ,]$MOT_TYPE <- "TYPE1"
+CMS_MOT[CMS_MOT$HEAR.RSLT=="I" & CMS_MOT$MOT=="Y" & CMS_MOT$initial ,]$MOT_TYPE <- "TYPE2"
+CMS_MOT[CMS_MOT$HEAR.RSLT=="MO"  & !CMS_MOT$initial ,]$MOT_TYPE <- "TYPE3"
+CMS_MOT[CMS_MOT$HEAR.RSLT=="MO"  & CMS_MOT$initial ,]$MOT_TYPE <- "TYPE4"
+#CMS_MOT <- as.data.frame(CMS_MOT)
+CMS_MOT <- select(CMS_MOT,-initial,- MOT,- HEAR.RSLT)
+CMS_MOT <- t(CMS_MOT)
+CMS_MOT <- as.data.frame(CMS_MOT,colnames)
+colnames(CMS_MOT) <- CMS_MOT[49,]
 
