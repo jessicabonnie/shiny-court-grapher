@@ -10,11 +10,12 @@ FIPS_Codes <- read.csv("data/FIPS_R.csv")
 # Remove Extraneous columns from CMS table
 CMS <- CMS[,!names(CMS) %in% c("Notes","Received","ErrorType","FilingDate","CorrectionDate")]
 
+#Remove extra white space from around some values
 CMS$HEAR.RSLT <- str_trim(CMS$HEAR.RSLT)
 CMS$CASE.TYP <- str_trim(CMS$CASE.TYP)
 CMS$MOT <- str_trim(CMS$MOT)
 
-#Create Month, Year
+#Create Month and Year columns
 CMS$HEAR.DATE <- as.Date(CMS$HEAR.DATE, format = '%m/%d/%Y')
 CMS$Year<- year(CMS$HEAR.DATE)
 CMS$Month <- month(CMS$HEAR.DATE)
@@ -39,15 +40,20 @@ CMS$FYMonthAbbrev <- factor(substr(month.name[CMS$Month],1,3),levels=substr(c(mo
 # Create a uniq identifier for the month (may or may not be needed)
 CMS$month_id <- factor(paste(CMS$FYear, str_pad(as.character(CMS$Month), 2, side="left", pad="0"), sep="-"))
 
+#Create FIPs column
 CMS$FIPS <- substr(CMS$CASE.NUMBER, 1, 4)
-#Create FIPS names
+
+#Include FIPS names
 CMS <- merge(CMS, FIPS_Codes, by = c("FIPS"), all.x = TRUE)
 CMS <- CMS[,!names(CMS) %in% c("SHORT_FIPS","COURT")]
 names(CMS)[names(CMS)=="NAME"] <- "Locality"
 
+#Use Pay Code to determine if Initial
 CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
 CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
 
+########### HERE'S THE MEAT #########
+# Create table of the counts of 4 Different MOT Types for all localities
 CMS_MOT <- filter(CMS, CASE.TYP =="MC", HEAR.RSLT %in% c("MO", "I"))%>%
   group_by(Locality,HEAR.RSLT, MOT, initial)%>%
   filter((HEAR.RSLT == "I" & (MOT == "Y") ) | HEAR.RSLT == "MO" ) %>%
