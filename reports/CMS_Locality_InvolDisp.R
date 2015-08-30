@@ -1,8 +1,13 @@
 library(stringr)
 library(lubridate)
 library(pander)
+library(dplyr)
+library(tidyr)
+
 CMS <- read.csv("data/CMS_8_26.txt")
 FIPS_Codes <- read.csv("data/FIPS_R.csv")
+
+CMS <- CMS[,!names(CMS) %in% c("Notes","Received","ErrorType","FilingDate","CorrectionDate")]
 
 CMS$HEAR.RSLT <- str_trim(CMS$HEAR.RSLT)
 CMS$CASE.TYP <- str_trim(CMS$CASE.TYP)

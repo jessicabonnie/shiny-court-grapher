@@ -46,7 +46,7 @@ CMS <- merge(CMS, FIPS_Codes, by = c("FIPS"), all.x = TRUE)
 CMS <- CMS[,!names(CMS) %in% c("SHORT_FIPS","COURT")]
 names(CMS)[names(CMS)=="NAME"] <- "Locality"
 
-#Use Pay Code to determine if Initial
+#Use Pay Code to determine if Hearing is Initial
 CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
 CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
 

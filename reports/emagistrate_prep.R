@@ -20,3 +20,7 @@ emags$month_id <- factor(paste(emags$FYear, str_pad(as.character(emags$Month), 2
 
 #Force FIPs into the correct format
 emags$FIPS <- str_pad(as.character(emags$Fips.Code),3,side="left",pad="0")
+
+#Remove unneccessary columns
+emags <- emags[,!names(emags) %in% c("Fips.Code")]
+
