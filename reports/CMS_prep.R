@@ -1,12 +1,14 @@
 library(stringr)
 library(lubridate)
 library(dplyr)
+
 CMS <- read.csv("../data/CMS_8_26.txt")
 FIPS_Codes <- read.csv("data/FIPS_R.csv")
 
 #remove extraneous columns
 CMS<- select(CMS, -ErrorType, -Notes, -CorrectionDate, -Received, -FilingDate, -ID)
 
+# Strip Whitespace from some values
 CMS$HEAR.RSLT <- str_trim(CMS$HEAR.RSLT)
 CMS$CASE.TYP <- str_trim(CMS$CASE.TYP)
 CMS$MOT <- str_trim(CMS$MOT)
@@ -36,14 +38,16 @@ CMS$FYMonthAbbrev <- factor(substr(month.name[CMS$Month],1,3),levels=substr(c(mo
 # Create a uniq identifier for the month (may or may not be needed)
 CMS$month_id <- factor(paste(CMS$FYear, str_pad(as.character(CMS$Month), 2, side="left", pad="0"), sep="-"))
 
+#Create FIPs column
 CMS$FIPS <- substr(CMS$CASE.NUMBER, 1, 4)
 
-
-
-#Create FIPS names
+#Include FIPS names
 CMS <- merge(CMS, FIPS_Codes, by = c("FIPS"), all.x = TRUE)
 CMS <- CMS[,!names(CMS) %in% c("SHORT_FIPS","COURT")]
 names(CMS)[names(CMS)=="NAME"] <- "Locality"
 
+#Use Pay Code to determine if Initial
+CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
+CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
 
 
