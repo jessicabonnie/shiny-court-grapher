@@ -2,8 +2,13 @@ library(stringr)
 library(lubridate)
 library(dplyr)
 
-CMS <- read.csv("data/CMS_8_26.txt")
-FIPS_Codes <- read.csv("data/FIPS_R.csv")
+
+CMS <- read.csv("../data/CMS_8_26.txt")
+FIPS_Codes <- read.csv("../data/FIPS_R.csv")
+
+#Paths for running script outside of markdown
+#CMS <- read.csv("data/CMS_8_26.txt")
+#FIPS_Codes <- read.csv("data/FIPS_R.csv")
 
 #remove extraneous columns
 CMS<- select(CMS, -ErrorType, -Notes, -CorrectionDate, -Received, -FilingDate, -ID)

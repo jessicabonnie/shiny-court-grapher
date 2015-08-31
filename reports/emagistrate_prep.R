@@ -1,5 +1,9 @@
 library(stringr)
-emags <- read.csv("data/ECOTDOFips08_14.txt")
+
+emags <- read.csv("../data/ECOTDOFips08_14.txt")
+
+#Path for running script outside of markdown
+#emags <- read.csv("data/ECOTDOFips08_14.txt")
 
 # Create Fiscal Year Variable
 emags$FYear<- emags$Year
