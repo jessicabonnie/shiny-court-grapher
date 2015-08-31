@@ -30,11 +30,11 @@ ECOJquarterly <-
   group_by(ECOJ, FQtr, FYear) %>%
   summarise(count = sum(Process.Count))
 
-p <- 
+ECOJqp <- 
   ggplot(ECOJquarterly, aes(factor(FQtr), count, group=factor(FYear), color=factor(FYear))) + 
   geom_line() +
   ylab("Number of ECOs") +
   xlab("Fiscal Quarter")
-p
 
-p + ylim(0,max(ECOJquarterly$count)) + geom_line(size=1.2) + scale_colour_discrete(name  ="Fiscal Year")+ ggtitle("Quarterly Frequency of ECOs Issued to Minors, FY2010-FY2015")
+
+ECOJqp <- ECOJqp + ylim(0,max(ECOJquarterly$count)) + geom_line(size=1.2) + scale_colour_discrete(name  ="Fiscal Year")+ ggtitle("Quarterly Frequency of ECOs Issued to Minors, FY2010-FY2015")
