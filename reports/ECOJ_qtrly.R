@@ -1,18 +1,11 @@
-emags <- read.csv("ECOTDOFips08_14.txt")
+##################
+# Draws quarterly graph of Juvenile ECOs from eMagistrate data
+# One line per year, with fiscal quarters on the x axis and counts on the y axis
+##################
+source("reports/emagistrate_prep.R")
 library(dplyr)
-library(stringr)
-library(tidyr)
 library(pander)
 library(ggplot2)
-
-emags$FYear<- emags$Year
-emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
-
-emags$FQtr <- emags$Month
-emags[emags$Month == 7|emags$Month==8| emags$Month==9, ]$FQtr <- 1
-emags[emags$Month == 10|emags$Month==11| emags$Month==12, ]$FQtr <- 2
-emags[emags$Month == 1|emags$Month==2| emags$Month==3, ]$FQtr <- 3
-emags[emags$Month == 4|emags$Month==5| emags$Month==6, ]$FQtr <- 4
 
 ECOJ <- 
   emags %>%
@@ -38,3 +31,4 @@ ECOJqp <-
 
 
 ECOJqp <- ECOJqp + ylim(0,max(ECOJquarterly$count)) + geom_line(size=1.2) + scale_colour_discrete(name  ="Fiscal Year")+ ggtitle("Quarterly Frequency of ECOs Issued to Minors, FY2010-FY2015")
+print(ECOJqp)
