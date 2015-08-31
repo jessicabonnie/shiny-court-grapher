@@ -2,7 +2,7 @@ library(stringr)
 library(lubridate)
 library(dplyr)
 
-CMS <- read.csv("../data/CMS_8_26.txt")
+CMS <- read.csv("data/CMS_8_26.txt")
 FIPS_Codes <- read.csv("data/FIPS_R.csv")
 
 #remove extraneous columns
@@ -50,4 +50,6 @@ names(CMS)[names(CMS)=="NAME"] <- "Locality"
 CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
 CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
 
+# The first quarter of FY2009 (July, August, September) is incomplete, so it is removed from the dataset
 
+CMS <- filter(CMS, !(FQtr == 1 & FYear==2009))
