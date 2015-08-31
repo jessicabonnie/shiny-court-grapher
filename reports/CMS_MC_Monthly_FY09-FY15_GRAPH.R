@@ -9,7 +9,7 @@ source("reports/CMS_prep.R")
 library(dplyr)
 library(tidyr)
 library(pander)
-
+library(ggthemes)
 
 CMS_MonthlyHearingsPlot <- 
   CMS %>%
