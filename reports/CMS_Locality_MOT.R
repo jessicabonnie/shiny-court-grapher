@@ -4,8 +4,8 @@ library(pander)
 library(dplyr)
 library(tidyr)
 
-CMS <- read.csv("data/CMS_8_26.txt")
-FIPS_Codes <- read.csv("data/FIPS_R.csv")
+CMS <- read.csv("../data/CMS_8_26.txt")
+FIPS_Codes <- read.csv("../data/FIPS_R.csv")
 
 # Remove Extraneous columns from CMS table
 CMS <- CMS[,!names(CMS) %in% c("Notes","Received","ErrorType","FilingDate","CorrectionDate")]
@@ -55,29 +55,32 @@ CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
 ########### HERE'S THE MEAT #########
 # Create table of the counts of 4 Different MOT Types for all localities
 CMS_MOT <- filter(CMS, CASE.TYP =="MC", HEAR.RSLT %in% c("MO", "I"))%>%
-  group_by(Locality,HEAR.RSLT, MOT, initial)%>%
-  filter((HEAR.RSLT == "I" & (MOT == "Y") ) | HEAR.RSLT == "MO" ) %>%
-  summarise(count = n()) %>%
-  spread(Locality,count)
+mutate(MOT_TYPE=ifelse((HEAR.RSLT=="I" & MOT=="Y" & !initial), "TYPE4", NA)) %>%
+mutate(MOT_TYPE=ifelse((HEAR.RSLT=="I" & MOT=="Y" & initial), "TYPE3", MOT_TYPE)) %>%
+mutate(MOT_TYPE=ifelse((HEAR.RSLT=="MO"  & initial), "TYPE1", MOT_TYPE)) %>%
+mutate(MOT_TYPE=ifelse((HEAR.RSLT=="MO"  & !initial), "TYPE2", MOT_TYPE)) %>%
+mutate(MOT_TYPE=factor(MOT_TYPE)) %>%
+#   group_by(Locality,HEAR.RSLT, MOT, initial)%>%
+group_by(Locality,MOT_TYPE)%>%
+#   filter((HEAR.RSLT == "I" & (MOT == "Y") ) | HEAR.RSLT == "MO" ) %>%
+  summarise(count = n()) 
 
-CMS_MOT$MOT_TYPE <- "X"
-CMS_MOT[CMS_MOT$HEAR.RSLT=="I" & CMS_MOT$MOT=="Y" & !CMS_MOT$initial ,]$MOT_TYPE <- "TYPE1"
-CMS_MOT[CMS_MOT$HEAR.RSLT=="I" & CMS_MOT$MOT=="Y" & CMS_MOT$initial ,]$MOT_TYPE <- "TYPE2"
-CMS_MOT[CMS_MOT$HEAR.RSLT=="MO"  & !CMS_MOT$initial ,]$MOT_TYPE <- "TYPE3"
-CMS_MOT[CMS_MOT$HEAR.RSLT=="MO"  & CMS_MOT$initial ,]$MOT_TYPE <- "TYPE4"
-#CMS_MOT <- as.data.frame(CMS_MOT)
-CMS_MOT <- select(CMS_MOT,-initial,- MOT,- HEAR.RSLT)
-CMS_MOT <- t(CMS_MOT)
+CMS_MOT <- CMS_MOT[complete.cases(CMS_MOT),]
 
+CMS_MOT <- spread(CMS_MOT,MOT_TYPE,count)
+
+CMS_MOT[is.na(CMS_MOT)] <- 0
+
+CMS_MOT$Total <- CMS_MOT$TYPE1 + CMS_MOT$TYPE2 + CMS_MOT$TYPE3 + CMS_MOT$TYPE4
+
+names(CMS_MOT) <- c("Locality /n whatever", "TYPE /n 1", "TYPE2", "TYP3", "TYPE4", "Total")
 
 # Trying to give MOT type column names
 #CMS_MOT <- as.data.frame(CMS_MOT,colnames)
 #colnames(CMS_MOT) <- CMS_MOT[49,]
 
-CMS_MOT <- as.data.frame(CMS_MOT)
-
-CMS_MOT<- rename(CMS_MOT, Stepdown_Recommitment_Discharge=V1, Stepdown_Initial_Discharge=V2, Stepdown_New_Hearing=V3, Direct=V4)
-CMS_MOT <- CMS_MOT[-50,]
+# CMS_MOT <- as.data.frame(CMS_MOT)
+# 
+# CMS_MOT<- rename(CMS_MOT, Stepdown_Recommitment_Discharge=V1, Stepdown_Initial_Discharge=V2, Stepdown_New_Hearing=V3, Direct=V4)
+# CMS_MOT <- CMS_MOT[-50,]
 pander(CMS_MOT, caption= "MOT Types by Locality")
-
-
