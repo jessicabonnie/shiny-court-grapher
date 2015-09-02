@@ -1,24 +1,51 @@
 ---
 title: 'Annual Statistical Report: Civil Commitment Procedures in Virginia'
 author: "AA Allen, JK Bonnie"
-date: "August 26, 2015"
-output: pdf_document
+date: "September, 2015"
+output:
+  pdf_document:
+    toc: yes
+subtitle: University of Virginia Institute of Law, Psychiatry and Public Policy
 ---
 
 
-
 ##ECOs
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(stringr)
+
+emags <- read.csv("../data/ECOTDOFips08_14.txt")
+
+#Path for running script outside of markdown
+#emags <- read.csv("data/ECOTDOFips08_14.txt")
+
+# Create Fiscal Year Variable
+emags$FYear<- emags$Year
+emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
+
+#Create Fiscal Quarter Variable
+emags$FQtr <- emags$Month
+emags[emags$Month == 7|emags$Month==8| emags$Month==9, ]$FQtr <- 1
+emags[emags$Month == 10|emags$Month==11| emags$Month==12, ]$FQtr <- 2
+emags[emags$Month == 1|emags$Month==2| emags$Month==3, ]$FQtr <- 3
+emags[emags$Month == 4|emags$Month==5| emags$Month==6, ]$FQtr <- 4
+
+# Create abbreviated month column, factored in accordance with fiscal calendar
+emags$FYMonthAbbrev <- factor(substr(month.name[emags$Month],1,3),levels=substr(c(month.name[7:12],month.name[1:6]),1,3))
+
+# Create a uniq identifier for the month (may or may not be needed)
+emags$month_id <- factor(paste(emags$FYear, str_pad(as.character(emags$Month), 2, side="left", pad="0"), sep="-"))
+
+#Force FIPs into the correct format
+emags$FIPS <- str_pad(as.character(emags$Fips.Code),3,side="left",pad="0")
+```
+
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-emags <- read.csv("ECOTDOFips08_14.txt")
 library(dplyr)
-library(stringr)
 library(tidyr)
 library(pander)
 library(ggplot2)
 
-emags$FYear<- emags$Year
-emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
 
 emagsECOAnnual <- 
         emags %>%
@@ -26,7 +53,7 @@ emagsECOAnnual <-
         group_by(FYear) %>%
         summarise(count = sum(Process.Count)) 
 
-pander(emagsECOAnnual, caption = "Annual Frequency of ECOs Issued to Adults, FY2010-FY2015")
+pander(emagsECOAnnual, caption = "Annual Frequency of ECOs Issued for Adults, FY2008-FY2015")
 ```
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -40,7 +67,7 @@ ECOyearly <-
 
 p <-  ggplot(ECOyearly, aes(x=FYear, y=count)) + geom_line() + geom_point() + geom_text(size=3, aes(label=count, hjust=0.5, vjust=2)) + ylab("Number of ECOs") +  xlab("Fiscal Year")
 
-p + ylim(0,max(ECOyearly$count)) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of ECOs Issued to Adults, FY2010-FY2015")
+p + ylim(0,max(ECOyearly$count)) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of ECOs Issued for Adults, FY2008-FY2015")
 ```
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -53,7 +80,7 @@ emagsECOMonthly <-
         spread(FYear, count) %>%
         mutate(Month = factor(month.name)) 
 
-pander(emagsECOMonthly, caption = "Monthly Frequency of ECOs Issued to Adults, FY2010-FY2015")
+pander(emagsECOMonthly, caption = "Monthly Frequency of ECOs Issued for Adults, FY2008-FY2015", split.cells=10)
 ```
 
 
@@ -79,7 +106,7 @@ p <-
   ylab("Number of ECOs") +
   xlab("Month")
 
-p + ylim(0,max(ECOmonthly2$count)) + geom_line(size=1.2) + scale_colour_discrete(name  ="Year")+ ggtitle("Monthly Frequency of ECOs Issued to Adults, FY2010-FY2015")
+p + ylim(0,max(ECOmonthly2$count)) + geom_line(size=1.2) + ggtitle("Monthly Frequency of ECOs Issued for Adults, FY2008-FY2015") + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year")
 ```
 
 
@@ -88,7 +115,7 @@ p + ylim(0,max(ECOmonthly2$count)) + geom_line(size=1.2) + scale_colour_discrete
 ##TDOs
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-emags <- read.csv("ECOTDOFips08_14.txt")
+emags <- read.csv("../data/ECOTDOFips08_14.txt")
 library(dplyr)
 library(stringr)
 library(tidyr)
@@ -104,7 +131,7 @@ emagsTDOAnnual <-
         group_by(FYear) %>%
         summarise(count = sum(Process.Count)) 
 
-pander(emagsTDOAnnual, caption = "Annual Frequency of TDOs Issued to Adults, FY2010-FY2015")
+pander(emagsTDOAnnual, caption = "Annual Frequency of TDOs Issued for Adults, FY2008-FY2015")
 
 ```
 
@@ -125,14 +152,14 @@ TDOyearly <-
 
 p <-  ggplot(TDOyearly, aes(x=FYear, y=count)) + geom_line() + geom_point() + geom_text(size=3, aes(label=count, hjust=0.5, vjust=2.5)) + ylab("Number of TDOs") +  xlab("Fiscal Year")
 
-p + ylim(1250,max(TDOyearly$count)) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of TDOs Issued to Adults, FY2010-FY2015")
+p + ylim(1250,max(TDOyearly$count)) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of TDOs Issued for Adults, FY2010-FY2015")
 
 
 ```
 
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-emags <- read.csv("ECOTDOFips08_14.txt")
+emags <- read.csv("../data/ECOTDOFips08_14.txt")
 
 library(dplyr)
 library(stringr)
@@ -151,12 +178,12 @@ emags2 <-
         spread(FYear, count) %>%
         mutate(Month = factor(month.name)) 
 
-pander(emags2, caption = "Monthly Frequency of TDOs Issued to Minors, FY2010-FY2015")
+pander(emags2, caption = "Monthly Frequency of TDOs Issued for Adults, FY2008-FY2015", split.cells=10)
 
 ```
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
 emags$FYear<- emags$Year
 emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
@@ -182,13 +209,286 @@ p <-
   ylab("Number of TDOs") +
   xlab("Month")
 
-p + ylim(0,max(TDOmonthly2$count)) + geom_line(size=1.2) + 
-  scale_colour_discrete(name  ="Fiscal Year") +
-  ggtitle("Monthly Frequency of TDOs Issued to Adults, FY2010-FY2015")
+p + ylim(0,max(TDOmonthly2$count)) + geom_line(size=1.2) +
+  ggtitle("Monthly Frequency of TDOs Issued for Adults, FY2008-FY2015") +  geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year")
 ```
 
-##All Adult Commitment Hearings
+##Initial Commitment Hearings
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(stringr)
+library(lubridate)
+library(dplyr)
+
+
+CMS <- read.csv("../data/CMS_8_26.txt")
+FIPS_Codes <- read.csv("../data/FIPS_R.csv")
+
+#Paths for running script outside of markdown
+#CMS <- read.csv("data/CMS_8_26.txt")
+#FIPS_Codes <- read.csv("data/FIPS_R.csv")
+
+#remove extraneous columns
+CMS<- select(CMS, -ErrorType, -Notes, -CorrectionDate, -Received, -FilingDate, -ID)
+
+# Strip Whitespace from some values
+CMS$HEAR.RSLT <- str_trim(CMS$HEAR.RSLT)
+CMS$CASE.TYP <- str_trim(CMS$CASE.TYP)
+CMS$MOT <- str_trim(CMS$MOT)
+
+#Create Month, Year
+CMS$HEAR.DATE <- as.Date(CMS$HEAR.DATE, format = '%m/%d/%Y')
+CMS$Year<- year(CMS$HEAR.DATE)
+CMS$Month <- month(CMS$HEAR.DATE)
+
+#Filter for no errors (keep or no?)
+CMS<- filter(CMS, Error< 1|is.na(Error))
+
+# Create Fiscal Year Variable
+CMS$FYear<- CMS$Year
+CMS[CMS$Month > 6, ]$FYear <- as.numeric(CMS[CMS$Month > 6, ]$Year) + 1
+
+#Create Fiscal Quarter Variable
+CMS$FQtr <- CMS$Month
+CMS[CMS$Month == 7|CMS$Month==8| CMS$Month==9, ]$FQtr <- 1
+CMS[CMS$Month == 10|CMS$Month==11| CMS$Month==12, ]$FQtr <- 2
+CMS[CMS$Month == 1|CMS$Month==2| CMS$Month==3, ]$FQtr <- 3
+CMS[CMS$Month == 4|CMS$Month==5| CMS$Month==6, ]$FQtr <- 4
+
+# Create abbreviated month column, factored in accordance with fiscal calendar
+CMS$FYMonthAbbrev <- factor(substr(month.name[CMS$Month],1,3),levels=substr(c(month.name[7:12],month.name[1:6]),1,3))
+
+# Create a uniq identifier for the month (may or may not be needed)
+CMS$month_id <- factor(paste(CMS$FYear, str_pad(as.character(CMS$Month), 2, side="left", pad="0"), sep="-"))
+
+#Create FIPs column
+CMS$FIPS <- substr(CMS$CASE.NUMBER, 1, 4)
+
+#Include FIPS names
+CMS <- merge(CMS, FIPS_Codes, by = c("FIPS"), all.x = TRUE)
+CMS <- CMS[,!names(CMS) %in% c("SHORT_FIPS","COURT")]
+names(CMS)[names(CMS)=="NAME"] <- "Locality"
+
+#Use Pay Code to determine if Hearing is Initial
+CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
+CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
+
+# The first quarter of FY2009 (July, August, September) is incomplete, so it is removed from the dataset
+
+CMS <- filter(CMS, !(FQtr == 1 & FYear==2009))
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+CMS_MonthlyHearingsInitial <- 
+  CMS %>%
+  filter(CASE.TYP=="MC", initial=="TRUE") %>%
+  group_by(initial, FYMonthAbbrev, FYear) %>%
+  summarise(count = n()) %>%
+  spread(FYear, count) %>%
+  select(-initial)
+
+names(CMS_MonthlyHearingsInitial)[names(CMS_MonthlyHearingsInitial)=="FYMonthAbbrev"] <- "Month"
+
+pander(CMS_MonthlyHearingsInitial, caption  = "Monthly Frequency of Initial Commitment Hearings for Adults, FY09-FY15", split.cells=9)
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# load all necessary packages
+library(dplyr)
+library(tidyr)
+library(pander)
+library(ggthemes)
+
+CMS_MonthlyHearingsInitialPlot <- 
+   CMS %>%
+  filter(CASE.TYP=="MC", initial=="TRUE") %>%
+  group_by(FYMonthAbbrev, FYear) %>%
+  summarise(count = n())
+
+MCInitialplot <- 
+  ggplot(CMS_MonthlyHearingsInitialPlot, aes(factor(FYMonthAbbrev), count,  group=factor(FYear), color=factor(FYear))) + 
+  geom_line() +
+  ylab("Number of Commitment Hearings") +
+  xlab("Month")
+
+MCInitialplot + ylim(1200, max(CMS_MonthlyHearingsInitialPlot$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year") + 
+  ggtitle("Monthly Frequency of Initial Commitment Hearings Involving Adults, FY2009-FY2015")
+```
+
+##Recommitment Hearings
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+CMS_MonthlyHearingsRecommit <- 
+  CMS %>%
+  filter(CASE.TYP=="MC", initial=="FALSE") %>%
+  group_by(initial, FYMonthAbbrev, FYear) %>%
+  summarise(count = n()) %>%
+  spread(FYear, count) %>%
+  select(-initial)
+
+names(CMS_MonthlyHearingsRecommit)[names(CMS_MonthlyHearingsRecommit)=="FYMonthAbbrev"] <- "Month"
+
+pander(CMS_MonthlyHearingsRecommit, caption  = "Monthly Frequency of Recommitment Hearings for Adults, FY09-FY15", split.cells=9)
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(tidyr)
+library(pander)
+library(ggthemes)
+
+CMS_MonthlyHearingsRecommitPlot <- 
+   CMS %>%
+  filter(CASE.TYP=="MC", initial=="FALSE") %>%
+  group_by(initial, FYMonthAbbrev, FYear) %>%
+  summarise(count = n())
+
+MCRecommitplot <- 
+  ggplot(CMS_MonthlyHearingsRecommitPlot, aes(factor(FYMonthAbbrev), count, group=factor(FYear), color=factor(FYear))) + 
+  geom_line() +
+  ylab("Number of Recommitment Hearings") +
+  xlab("Month")
+
+MCRecommitplot + ylim(0, max(CMS_MonthlyHearingsRecommitPlot$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year") + 
+  ggtitle("Monthly Frequency of Recommitment Hearings Involving Adults, FY2009-FY2015")
+```
 
 ##Involuntary Commitment Orders
 
+##Mandatory Outpatient Treatment
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+library(stringr)
+library(lubridate)
+library(pander)
+library(dplyr)
+library(tidyr)
+
+CMS <- read.csv("../data/CMS_8_26.txt")
+FIPS_Codes <- read.csv("../data/FIPS_R.csv")
+
+# Remove Extraneous columns from CMS table
+CMS <- CMS[,!names(CMS) %in% c("Notes","Received","ErrorType","FilingDate","CorrectionDate")]
+
+#Remove extra white space from around some values
+CMS$HEAR.RSLT <- str_trim(CMS$HEAR.RSLT)
+CMS$CASE.TYP <- str_trim(CMS$CASE.TYP)
+CMS$MOT <- str_trim(CMS$MOT)
+
+#Create Month and Year columns
+CMS$HEAR.DATE <- as.Date(CMS$HEAR.DATE, format = '%m/%d/%Y')
+CMS$Year<- year(CMS$HEAR.DATE)
+CMS$Month <- month(CMS$HEAR.DATE)
+
+#Filter for no errors (keep or no?)
+CMS<- filter(CMS, Error< 1|is.na(Error))
+
+# Create Fiscal Year Variable
+CMS$FYear<- CMS$Year
+CMS[CMS$Month > 6, ]$FYear <- as.numeric(CMS[CMS$Month > 6, ]$Year) + 1
+
+#Create Fiscal Quarter Variable
+CMS$FQtr <- CMS$Month
+CMS[CMS$Month == 7|CMS$Month==8| CMS$Month==9, ]$FQtr <- 1
+CMS[CMS$Month == 10|CMS$Month==11| CMS$Month==12, ]$FQtr <- 2
+CMS[CMS$Month == 1|CMS$Month==2| CMS$Month==3, ]$FQtr <- 3
+CMS[CMS$Month == 4|CMS$Month==5| CMS$Month==6, ]$FQtr <- 4
+
+# Create abbreviated month column, factored in accordance with fiscal calendar
+CMS$FYMonthAbbrev <- factor(substr(month.name[CMS$Month],1,3),levels=substr(c(month.name[7:12],month.name[1:6]),1,3))
+
+# Create a uniq identifier for the month (may or may not be needed)
+CMS$month_id <- factor(paste(CMS$FYear, str_pad(as.character(CMS$Month), 2, side="left", pad="0"), sep="-"))
+
+#Create FIPs column
+CMS$FIPS <- substr(CMS$CASE.NUMBER, 1, 4)
+
+#Include FIPS names
+CMS <- merge(CMS, FIPS_Codes, by = c("FIPS"), all.x = TRUE)
+CMS <- CMS[,!names(CMS) %in% c("SHORT_FIPS","COURT")]
+names(CMS)[names(CMS)=="NAME"] <- "Locality"
+
+#Use Pay Code to determine if Initial
+CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
+CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
+
+########### HERE'S THE MEAT #########
+# Create table of the counts of 4 Different MOT Types for all localities
+CMS_MOT <- filter(CMS, CASE.TYP =="MC", HEAR.RSLT %in% c("MO", "I"))%>%
+  group_by(Locality,HEAR.RSLT, MOT, initial)%>%
+  filter((HEAR.RSLT == "I" & (MOT == "Y") ) | HEAR.RSLT == "MO" ) %>%
+  summarise(count = n()) %>%
+  spread(Locality,count)
+
+CMS_MOT$MOT_TYPE <- "X"
+CMS_MOT[CMS_MOT$HEAR.RSLT=="I" & CMS_MOT$MOT=="Y" & !CMS_MOT$initial ,]$MOT_TYPE <- "TYPE1"
+CMS_MOT[CMS_MOT$HEAR.RSLT=="I" & CMS_MOT$MOT=="Y" & CMS_MOT$initial ,]$MOT_TYPE <- "TYPE2"
+CMS_MOT[CMS_MOT$HEAR.RSLT=="MO"  & !CMS_MOT$initial ,]$MOT_TYPE <- "TYPE3"
+CMS_MOT[CMS_MOT$HEAR.RSLT=="MO"  & CMS_MOT$initial ,]$MOT_TYPE <- "TYPE4"
+#CMS_MOT <- as.data.frame(CMS_MOT)
+CMS_MOT <- select(CMS_MOT,-initial,- MOT,- HEAR.RSLT)
+CMS_MOT <- t(CMS_MOT)
+
+
+# Trying to give MOT type column names
+#CMS_MOT <- as.data.frame(CMS_MOT,colnames)
+#colnames(CMS_MOT) <- CMS_MOT[49,]
+
+CMS_MOT <- as.data.frame(CMS_MOT)
+
+CMS_MOT<- rename(CMS_MOT, Stepdown_Recommitment_Discharge=V1, Stepdown_Initial_Discharge=V2, Stepdown_New_Hearing=V3, Direct=V4)
+CMS_MOT <- CMS_MOT[-50,]
+pander(CMS_MOT, caption= "MOT Types by Locality")
+```
+
+
+
 ##Alternative Transportation Orders
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+ATO <- read.csv("../data/ATO with TimeInfo_8_26_15.txt")
+
+ATO<-filter(ATO, Form=="ECO"| Form=="TDO")
+
+  ATO_Tot<- ATO %>%
+  group_by(FYEAR, Form) %>%
+  summarise(count = n()) %>%
+  spread(FYEAR, count)
+
+  ATO_Tot[is.na(ATO_Tot)]<- 0
+  
+names(ATO_Tot)[names(ATO_Tot)=="Form"] <- "Type"
+names(ATO_Tot)[names(ATO_Tot)=="ATO.Category"] <- "Provider"
+names(ATO_Tot)[names(ATO_Tot)=="2010"] <- "FY10"
+names(ATO_Tot)[names(ATO_Tot)=="2011"] <- "FY11"
+names(ATO_Tot)[names(ATO_Tot)=="2012"] <- "FY12"
+names(ATO_Tot)[names(ATO_Tot)=="2013"] <- "FY13"
+names(ATO_Tot)[names(ATO_Tot)=="2014"] <- "FY14"
+names(ATO_Tot)[names(ATO_Tot)=="2015"] <- "FY15"
+pander(ATO_Tot, caption = "Annual Frequency of ATOs Issued for Adults, by Order Type, FY10-FY15")
+
+ATO_Provider<- ATO %>%
+  group_by(FYEAR, ATO.Category) %>%
+  summarise(count = n()) %>%
+  spread(FYEAR, count)
+
+names(ATO_Provider)[names(ATO_Provider)=="ATO.Category"] <- "Transportation Provider"
+names(ATO_Provider)[names(ATO_Provider)=="2010"] <- "FY10"
+names(ATO_Provider)[names(ATO_Provider)=="2011"] <- "FY11"
+names(ATO_Provider)[names(ATO_Provider)=="2012"] <- "FY12"
+names(ATO_Provider)[names(ATO_Provider)=="2013"] <- "FY13"
+names(ATO_Provider)[names(ATO_Provider)=="2014"] <- "FY14"
+names(ATO_Provider)[names(ATO_Provider)=="2015"] <- "FY15"
+
+ATO_Provider[is.na(ATO_Provider)]<- 0
+
+pander(ATO_Provider, caption = "Annual Frequency of ATOs Issued for Adults, by Transportation Provider, FY10-FY15", split.cells=7)
+
+
+```
