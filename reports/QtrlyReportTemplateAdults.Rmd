@@ -10,37 +10,38 @@ subtitle: University of Virginia Institute of Law, Psychiatry and Public Policy
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("CMS_prep.R")
 CMS.Annual <- filter(CMS, !(FQtr == 1 & FYear==2009))
+source("emagistrate_prep.R")
 ```
 
 
 ##ECOs
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(stringr)
-
-emags <- read.csv("../data/ECOTDOFips08_14.txt")
-
-#Path for running script outside of markdown
-#emags <- read.csv("data/ECOTDOFips08_14.txt")
-
-# Create Fiscal Year Variable
-emags$FYear<- emags$Year
-emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
-
-#Create Fiscal Quarter Variable
-emags$FQtr <- emags$Month
-emags[emags$Month == 7|emags$Month==8| emags$Month==9, ]$FQtr <- 1
-emags[emags$Month == 10|emags$Month==11| emags$Month==12, ]$FQtr <- 2
-emags[emags$Month == 1|emags$Month==2| emags$Month==3, ]$FQtr <- 3
-emags[emags$Month == 4|emags$Month==5| emags$Month==6, ]$FQtr <- 4
-
-# Create abbreviated month column, factored in accordance with fiscal calendar
-emags$FYMonthAbbrev <- factor(substr(month.name[emags$Month],1,3),levels=substr(c(month.name[7:12],month.name[1:6]),1,3))
-
-# Create a uniq identifier for the month (may or may not be needed)
-emags$month_id <- factor(paste(emags$FYear, str_pad(as.character(emags$Month), 2, side="left", pad="0"), sep="-"))
-
-#Force FIPs into the correct format
-emags$FIPS <- str_pad(as.character(emags$Fips.Code),3,side="left",pad="0")
+# 
+# #emags <- read.csv("../data/ECOTDOFips08_14.txt")
+# 
+# #Path for running script outside of markdown
+# #emags <- read.csv("data/ECOTDOFips08_14.txt")
+# 
+# # Create Fiscal Year Variable
+# emags$FYear<- emags$Year
+# emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
+# 
+# #Create Fiscal Quarter Variable
+# emags$FQtr <- emags$Month
+# emags[emags$Month == 7|emags$Month==8| emags$Month==9, ]$FQtr <- 1
+# emags[emags$Month == 10|emags$Month==11| emags$Month==12, ]$FQtr <- 2
+# emags[emags$Month == 1|emags$Month==2| emags$Month==3, ]$FQtr <- 3
+# emags[emags$Month == 4|emags$Month==5| emags$Month==6, ]$FQtr <- 4
+# 
+# # Create abbreviated month column, factored in accordance with fiscal calendar
+# emags$FYMonthAbbrev <- factor(substr(month.name[emags$Month],1,3),levels=substr(c(month.name[7:12],month.name[1:6]),1,3))
+# 
+# # Create a uniq identifier for the month (may or may not be needed)
+# emags$month_id <- factor(paste(emags$FYear, str_pad(as.character(emags$Month), 2, side="left", pad="0"), sep="-"))
+# 
+# #Force FIPs into the correct format
+# emags$FIPS <- str_pad(as.character(emags$Fips.Code),3,side="left",pad="0")
 ```
 
 
@@ -118,15 +119,15 @@ p + ylim(0,max(ECOmonthly2$count)) + geom_line(size=1.2) + ggtitle("Monthly Freq
 ##TDOs
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-emags <- read.csv("../data/ECOTDOFips08_14.txt")
+#emags <- read.csv("../data/ECOTDOFips08_14.txt")
 library(dplyr)
 library(stringr)
 library(tidyr)
 library(pander)
 library(ggplot2)
 
-emags$FYear<- emags$Year
-emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
+# emags$FYear<- emags$Year
+# emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
 
 emagsTDOAnnual <- 
         emags %>%
@@ -187,8 +188,8 @@ pander(emags2, caption = "Monthly Frequency of TDOs Issued for Adults, FY2008-FY
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
-emags$FYear<- emags$Year
-emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
+# emags$FYear<- emags$Year
+# emags[emags$Month > 6, ]$FYear <- as.numeric(emags[emags$Month > 6, ]$Year) + 1
 
 TDO <- 
   emags %>%
@@ -371,82 +372,86 @@ library(pander)
 library(dplyr)
 library(tidyr)
 
-#CMS <- read.csv("../data/CMS_8_26.txt")
-#FIPS_Codes <- read.csv("../data/FIPS_R.csv")
+source("CMS_Locality_MOT.R")
+pander(CMS_MOT, caption= "MOT Types by Locality", keep.line.breaks = TRUE,split.table = Inf)
 
-# Remove Extraneous columns from CMS table
-#CMS <- CMS[,!names(CMS) %in% c("Notes","Received","ErrorType","FilingDate","CorrectionDate")]
-
-#Remove extra white space from around some values
-#CMS$HEAR.RSLT <- str_trim(CMS$HEAR.RSLT)
-#CMS$CASE.TYP <- str_trim(CMS$CASE.TYP)
-#CMS$MOT <- str_trim(CMS$MOT)
-
-#Create Month and Year columns
-#CMS$HEAR.DATE <- as.Date(CMS$HEAR.DATE, format = '%m/%d/%Y')
-#CMS$Year<- year(CMS$HEAR.DATE)
-#CMS$Month <- month(CMS$HEAR.DATE)
-
-#Filter for no errors (keep or no?)
-#CMS<- filter(CMS, Error< 1|is.na(Error))
-
-# Create Fiscal Year Variable
-#CMS$FYear<- CMS$Year
-#CMS[CMS$Month > 6, ]$FYear <- as.numeric(CMS[CMS$Month > 6, ]$Year) + 1
-
-#Create Fiscal Quarter Variable
-#CMS$FQtr <- CMS$Month
-#CMS[CMS$Month == 7|CMS$Month==8| CMS$Month==9, ]$FQtr <- 1
-#CMS[CMS$Month == 10|CMS$Month==11| CMS$Month==12, ]$FQtr <- 2
-#CMS[CMS$Month == 1|CMS$Month==2| CMS$Month==3, ]$FQtr <- 3
-#CMS[CMS$Month == 4|CMS$Month==5| CMS$Month==6, ]$FQtr <- 4
-
-# Create abbreviated month column, factored in accordance with fiscal calendar
-#CMS$FYMonthAbbrev <- factor(substr(month.name[CMS$Month],1,3),levels=substr(c(month.name[7:12],month.name[1:6]),1,3))
-
-# Create a uniq identifier for the month (may or may not be needed)
-#CMS$month_id <- factor(paste(CMS$FYear, str_pad(as.character(CMS$Month), 2, side="left", pad="0"), sep="-"))
-
-#Create FIPs column
-#CMS$FIPS <- substr(CMS$CASE.NUMBER, 1, 4)
-
-#Include FIPS names
-#CMS <- merge(CMS, FIPS_Codes, by = c("FIPS"), all.x = TRUE)
-#CMS <- CMS[,!names(CMS) %in% c("SHORT_FIPS","COURT")]
-#names(CMS)[names(CMS)=="NAME"] <- "Locality"
-
-#Use Pay Code to determine if Initial
-#CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
-#CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
-
-########### HERE'S THE MEAT #########
-# Create table of the counts of 4 Different MOT Types for all localities
-CMS_MOT <- filter(CMS, CASE.TYP =="MC", HEAR.RSLT %in% c("MO", "I"))%>%
-  mutate(MOT_TYPE)
-  group_by(Locality,HEAR.RSLT, MOT, initial)%>%
-  filter((HEAR.RSLT == "I" & (MOT == "Y") ) | HEAR.RSLT == "MO" ) %>%
-  summarise(count = n()) %>%
-  spread(Locality,count)
-
-CMS_MOT$MOT_TYPE <- "X"
-CMS_MOT[CMS_MOT$HEAR.RSLT=="I" & CMS_MOT$MOT=="Y" & !CMS_MOT$initial ,]$MOT_TYPE <- "TYPE1"
-CMS_MOT[CMS_MOT$HEAR.RSLT=="I" & CMS_MOT$MOT=="Y" & CMS_MOT$initial ,]$MOT_TYPE <- "TYPE2"
-CMS_MOT[CMS_MOT$HEAR.RSLT=="MO"  & !CMS_MOT$initial ,]$MOT_TYPE <- "TYPE3"
-CMS_MOT[CMS_MOT$HEAR.RSLT=="MO"  & CMS_MOT$initial ,]$MOT_TYPE <- "TYPE4"
-#CMS_MOT <- as.data.frame(CMS_MOT)
-CMS_MOT <- select(CMS_MOT,-initial,- MOT,- HEAR.RSLT)
-CMS_MOT <- t(CMS_MOT)
-
-
-# Trying to give MOT type column names
-#CMS_MOT <- as.data.frame(CMS_MOT,colnames)
-#colnames(CMS_MOT) <- CMS_MOT[49,]
-
-CMS_MOT <- as.data.frame(CMS_MOT)
-
-CMS_MOT<- rename(CMS_MOT, Stepdown_Recommitment_Discharge=V1, Stepdown_Initial_Discharge=V2, Stepdown_New_Hearing=V3, Direct=V4)
-CMS_MOT <- CMS_MOT[-50,]
-pander(CMS_MOT, caption= "MOT Types by Locality")
+# 
+# #CMS <- read.csv("../data/CMS_8_26.txt")
+# #FIPS_Codes <- read.csv("../data/FIPS_R.csv")
+# 
+# # Remove Extraneous columns from CMS table
+# #CMS <- CMS[,!names(CMS) %in% c("Notes","Received","ErrorType","FilingDate","CorrectionDate")]
+# 
+# #Remove extra white space from around some values
+# #CMS$HEAR.RSLT <- str_trim(CMS$HEAR.RSLT)
+# #CMS$CASE.TYP <- str_trim(CMS$CASE.TYP)
+# #CMS$MOT <- str_trim(CMS$MOT)
+# 
+# #Create Month and Year columns
+# #CMS$HEAR.DATE <- as.Date(CMS$HEAR.DATE, format = '%m/%d/%Y')
+# #CMS$Year<- year(CMS$HEAR.DATE)
+# #CMS$Month <- month(CMS$HEAR.DATE)
+# 
+# #Filter for no errors (keep or no?)
+# #CMS<- filter(CMS, Error< 1|is.na(Error))
+# 
+# # Create Fiscal Year Variable
+# #CMS$FYear<- CMS$Year
+# #CMS[CMS$Month > 6, ]$FYear <- as.numeric(CMS[CMS$Month > 6, ]$Year) + 1
+# 
+# #Create Fiscal Quarter Variable
+# #CMS$FQtr <- CMS$Month
+# #CMS[CMS$Month == 7|CMS$Month==8| CMS$Month==9, ]$FQtr <- 1
+# #CMS[CMS$Month == 10|CMS$Month==11| CMS$Month==12, ]$FQtr <- 2
+# #CMS[CMS$Month == 1|CMS$Month==2| CMS$Month==3, ]$FQtr <- 3
+# #CMS[CMS$Month == 4|CMS$Month==5| CMS$Month==6, ]$FQtr <- 4
+# 
+# # Create abbreviated month column, factored in accordance with fiscal calendar
+# #CMS$FYMonthAbbrev <- factor(substr(month.name[CMS$Month],1,3),levels=substr(c(month.name[7:12],month.name[1:6]),1,3))
+# 
+# # Create a uniq identifier for the month (may or may not be needed)
+# #CMS$month_id <- factor(paste(CMS$FYear, str_pad(as.character(CMS$Month), 2, side="left", pad="0"), sep="-"))
+# 
+# #Create FIPs column
+# #CMS$FIPS <- substr(CMS$CASE.NUMBER, 1, 4)
+# 
+# #Include FIPS names
+# #CMS <- merge(CMS, FIPS_Codes, by = c("FIPS"), all.x = TRUE)
+# #CMS <- CMS[,!names(CMS) %in% c("SHORT_FIPS","COURT")]
+# #names(CMS)[names(CMS)=="NAME"] <- "Locality"
+# 
+# #Use Pay Code to determine if Initial
+# #CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
+# #CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
+# 
+# ########### HERE'S THE MEAT #########
+# # Create table of the counts of 4 Different MOT Types for all localities
+# CMS_MOT <- filter(CMS, CASE.TYP =="MC", HEAR.RSLT %in% c("MO", "I"))%>%
+#   mutate(MOT_TYPE)
+#   group_by(Locality,HEAR.RSLT, MOT, initial)%>%
+#   filter((HEAR.RSLT == "I" & (MOT == "Y") ) | HEAR.RSLT == "MO" ) %>%
+#   summarise(count = n()) %>%
+#   spread(Locality,count)
+# 
+# CMS_MOT$MOT_TYPE <- "X"
+# CMS_MOT[CMS_MOT$HEAR.RSLT=="I" & CMS_MOT$MOT=="Y" & !CMS_MOT$initial ,]$MOT_TYPE <- "TYPE1"
+# CMS_MOT[CMS_MOT$HEAR.RSLT=="I" & CMS_MOT$MOT=="Y" & CMS_MOT$initial ,]$MOT_TYPE <- "TYPE2"
+# CMS_MOT[CMS_MOT$HEAR.RSLT=="MO"  & !CMS_MOT$initial ,]$MOT_TYPE <- "TYPE3"
+# CMS_MOT[CMS_MOT$HEAR.RSLT=="MO"  & CMS_MOT$initial ,]$MOT_TYPE <- "TYPE4"
+# #CMS_MOT <- as.data.frame(CMS_MOT)
+# CMS_MOT <- select(CMS_MOT,-initial,- MOT,- HEAR.RSLT)
+# CMS_MOT <- t(CMS_MOT)
+# 
+# 
+# # Trying to give MOT type column names
+# #CMS_MOT <- as.data.frame(CMS_MOT,colnames)
+# #colnames(CMS_MOT) <- CMS_MOT[49,]
+# 
+# CMS_MOT <- as.data.frame(CMS_MOT)
+# 
+# CMS_MOT<- rename(CMS_MOT, Stepdown_Recommitment_Discharge=V1, Stepdown_Initial_Discharge=V2, Stepdown_New_Hearing=V3, Direct=V4)
+# CMS_MOT <- CMS_MOT[-50,]
+# pander(CMS_MOT, caption= "MOT Types by Locality")
 ```
 
 
