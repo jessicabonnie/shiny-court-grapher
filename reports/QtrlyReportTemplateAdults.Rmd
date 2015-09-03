@@ -84,7 +84,7 @@ emagsECOMonthly <-
         summarise(count = sum(Process.Count)) %>%
         spread(FYear, count)
 
-pander(emagsECOMonthly, caption = "Monthly Frequency of ECOs Issued for Adults, FY2008-FY2015", split.cells=10)
+pander(emagsECOMonthly, caption = "Monthly Frequency of ECOs Issued for Adults, FY2008-FY2015", split.table = Inf)
 ```
 
 
@@ -181,7 +181,7 @@ emags2 <-
         summarise(count = sum(Process.Count)) %>%
         spread(FYear, count)
 
-pander(emags2, caption = "Monthly Frequency of TDOs Issued for Adults, FY2008-FY2015", split.cells=5)
+pander(emags2, caption = "Monthly Frequency of TDOs Issued for Adults, FY2008-FY2015", split.table = Inf)
 
 ```
 
@@ -292,7 +292,7 @@ CMS_MonthlyHearingsInitial <-
 
 names(CMS_MonthlyHearingsInitial)[names(CMS_MonthlyHearingsInitial)=="FYMonthAbbrev"] <- "Month"
 
-pander(CMS_MonthlyHearingsInitial, caption  = "Monthly Frequency of Initial Commitment Hearings for Adults, FY09-FY15", split.cells=9)
+pander(CMS_MonthlyHearingsInitial, caption  = "Monthly Frequency of Initial Commitment Hearings for Adults, FY09-FY15", split.table = Inf)
 ```
 
 
@@ -335,7 +335,7 @@ CMS_MonthlyHearingsRecommit <-
 
 names(CMS_MonthlyHearingsRecommit)[names(CMS_MonthlyHearingsRecommit)=="FYMonthAbbrev"] <- "Month"
 
-pander(CMS_MonthlyHearingsRecommit, caption  = "Monthly Frequency of Recommitment Hearings for Adults, FY09-FY15", split.cells=9)
+pander(CMS_MonthlyHearingsRecommit, caption  = "Monthly Frequency of Recommitment Hearings for Adults, FY09-FY15", split.table = Inf)
 ```
 
 
@@ -364,6 +364,30 @@ MCRecommitplot + ylim(0, max(CMS_MonthlyHearingsRecommitPlot$count)) + geom_line
 ##Involuntary Commitment Orders
 
 ##Mandatory Outpatient Treatment
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("CMS_MOT_Annual_Tot_FY09-FY15_Plot.R")
+MOT_Annual_Plot + ylim(0,350) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of MOT Orders (All Types), FY09-FY15")
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("CMS_MOT_Annual_FY09_FY15_Table.R")
+
+pander(CMS_MOT_Annual, caption= "Fiscal Year MOT Counts by Type", keep.line.breaks = TRUE,split.table = Inf)
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("CMS_MOT_Type_Qtrly_FY09-FY15.R")
+MOT_Type_Qtrly_Plot + ylim(0,85) + geom_line(size=1.2) + geom_point(aes(shape=factor(MOT_TYPE)), size=3) + scale_colour_discrete(name  ="MOT Type") + scale_shape_discrete(name="MOT Type") + ggtitle("Quarterly MOT Trends by Type, FY09-FY15") +
+  scale_x_discrete(labels=c("09-2", "09-3", "09-4", "10-1", "10-2", "10-3", "10-4", "11-1", "11-2", "11-3", "11-4",
+                            "12-1", "12-2", "12-3", "12-4", "13-1", "13-2", "13-3", "13-4",
+                            "14-1", "14-2", "14-3", "14-4", "15-1", "15-2","15-3", "15-4")) + theme(axis.text.x = element_text(angle=90))
+
+
+```
+
+
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
 library(stringr)
@@ -457,7 +481,6 @@ pander(CMS_MOT, caption= "MOT Types by Locality", keep.line.breaks = TRUE,split.
 
 
 ##Alternative Transportation Orders
-
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 ATO <- read.csv("../data/ATO with TimeInfo_8_26_15.txt")
