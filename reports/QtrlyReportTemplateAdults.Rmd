@@ -3,6 +3,7 @@ title: 'Annual Statistical Report: Civil Commitment Procedures in Virginia'
 author: "AA Allen, JK Bonnie"
 date: "September, 2015"
 output:
+  word_document: default
   pdf_document:
     toc: yes
 subtitle: University of Virginia Institute of Law, Psychiatry and Public Policy
@@ -116,7 +117,7 @@ p <-
   ylab("Number of ECOs") +
   xlab("Month")
 
-p + ylim(0,max(ECOmonthly2$count)) + geom_line(size=1.2) + ggtitle("Monthly Frequency of ECOs Issued for Adults, FY2008-FY2015") + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year")
+p + ylim(200,max(ECOmonthly2$count)) + geom_line(size=1.2) + ggtitle("Monthly Frequency of ECOs Issued for Adults, FY2008-FY2015") + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year")
 ```
 
 
@@ -224,7 +225,7 @@ p <-
   ylab("Number of TDOs") +
   xlab("Month")
 
-p + ylim(0,max(TDOmonthly2$count)) + geom_line(size=1.2) +
+p + ylim(1200,max(TDOmonthly2$count)) + geom_line(size=1.2) +
   ggtitle("Monthly Frequency of TDOs Issued for Adults, FY2008-FY2015") +  geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year")
 ```
 
@@ -376,7 +377,7 @@ MCRecommitplot + ylim(0, max(CMS_MonthlyHearingsRecommitPlot$count)) + geom_line
 ##Involuntary Commitment Orders
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("CMS_MC_I_Monthly_FY09-FY15_PLOT.R")
-MC_Iplot + ylim(0, max(CMS_MonthlyCommitmentsPlot$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year") + 
+MC_Iplot + ylim(600, max(CMS_MonthlyCommitmentsPlot$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year") + 
   ggtitle("Monthly Frequency of Involuntary Commitment Orders for Adults (Initial Only), FY2009-FY2015")
 
 ```
