@@ -1,11 +1,14 @@
-
+##################
+# Draws monthly table of Juvenile Emergency Custody Orders from eMagistrate data
+# One line per year, with fiscal months on the x axis and counts on the y axis
+##################
 # Load libraries
-library(dplyr)
-library(stringr)
-library(ggplot2)
+#library(dplyr)
+#library(stringr)
+#library(ggplot2)
 
 # read in emagistrate data (emags)
-source("reports/emagistrate_prep.R")
+#source("reports/emagistrate_prep.R")
 
 ECOJ <- 
   emags %>%
