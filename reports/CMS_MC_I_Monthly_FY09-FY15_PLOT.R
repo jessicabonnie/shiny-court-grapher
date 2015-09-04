@@ -23,5 +23,5 @@ MC_Iplot <-
   ylab("Number of Involuntary Commitment Orders") +
   xlab("Month")
 
-MC_Iplot + ylim(0, max(CMS_MonthlyCommitmentsPlot$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year") + 
-  ggtitle("Monthly Frequency of Involuntary Commitment Orders for Adults (Initial Only), FY2009-FY2015")
+#MC_Iplot + ylim(0, max(CMS_MonthlyCommitmentsPlot$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year") + 
+  #ggtitle("Monthly Frequency of Involuntary Commitment Orders for Adults (Initial Only), FY2009-FY2015")

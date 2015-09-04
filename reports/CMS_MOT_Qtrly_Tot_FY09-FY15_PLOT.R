@@ -52,18 +52,18 @@ library(ggplot2)
 # names(CMS)[names(CMS)=="NAME"] <- "Locality"
 # 
 # #Use Pay Code to determine if Initial
-# CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
-# CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
+# CMS$Initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
+# CMS$Initial [is.na(CMS$PAY.CD)] <- TRUE
 
 ########### HERE'S THE MEAT #########
 # Create table of the counts of 4 Different MOT Types for all localities
 CMS_MOT_Qtrly_Tot <- filter(CMS, CASE.TYP =="MC", HEAR.RSLT %in% c("MO", "I"))%>%
-  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="I" & MOT=="Y" & !initial), "TYPE4", NA)) %>%
-  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="I" & MOT=="Y" & initial), "TYPE3", MOT_TYPE)) %>%
-  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="MO"  & initial), "TYPE1", MOT_TYPE)) %>%
-  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="MO"  & !initial), "TYPE2", MOT_TYPE)) %>%
+  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="I" & MOT=="Y" & !Initial), "TYPE4", NA)) %>%
+  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="I" & MOT=="Y" & Initial), "TYPE3", MOT_TYPE)) %>%
+  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="MO"  & Initial), "TYPE1", MOT_TYPE)) %>%
+  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="MO"  & !Initial), "TYPE2", MOT_TYPE)) %>%
   filter(MOT_TYPE=="TYPE1"| MOT_TYPE=="TYPE2" | MOT_TYPE== "TYPE3" | MOT_TYPE=="TYPE4") %>%
-  #   group_by(Locality,HEAR.RSLT, MOT, initial)%>%
+  #   group_by(Locality,HEAR.RSLT, MOT, Initial)%>%
   group_by(FYear, FQtr)%>%
   #   filter((HEAR.RSLT == "I" & (MOT == "Y") ) | HEAR.RSLT == "MO" ) %>%
   summarise(count = n()) 

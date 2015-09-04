@@ -51,18 +51,18 @@ library(tidyr)
 # names(CMS)[names(CMS)=="NAME"] <- "Locality"
 # 
 # #Use Pay Code to determine if Initial
-# CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
-# CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
+# CMS$Initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
+# CMS$Initial [is.na(CMS$PAY.CD)] <- TRUE
 
 ########### HERE'S THE MEAT #########
 # Create table of the counts of 4 Different MOT Types for all localities
 CMS_MOT_Type_Qtrly <- filter(CMS, CASE.TYP =="MC", HEAR.RSLT %in% c("MO", "I"))%>%
-  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="I" & MOT=="Y" & !initial), "Discharge Recommit", NA)) %>%
-  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="I" & MOT=="Y" & initial), "Discharge Initial", MOT_TYPE)) %>%
-  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="MO"  & initial), "Direct", MOT_TYPE)) %>%
-  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="MO"  & !initial), "New Hearing", MOT_TYPE)) %>%
+  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="I" & MOT=="Y" & !Initial), "Discharge Recommit", NA)) %>%
+  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="I" & MOT=="Y" & Initial), "Discharge Initial", MOT_TYPE)) %>%
+  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="MO"  & Initial), "Direct", MOT_TYPE)) %>%
+  mutate(MOT_TYPE=ifelse((HEAR.RSLT=="MO"  & !Initial), "New Hearing", MOT_TYPE)) %>%
   mutate(MOT_TYPE=factor(MOT_TYPE)) %>%
-  #   group_by(Locality,HEAR.RSLT, MOT, initial)%>%
+  #   group_by(Locality,HEAR.RSLT, MOT, Initial)%>%
   group_by(FYear, FQtr, MOT_TYPE)%>%
   #   filter((HEAR.RSLT == "I" & (MOT == "Y") ) | HEAR.RSLT == "MO" ) %>%
   summarise(count = n()) 
