@@ -348,6 +348,14 @@ MCInitialplot + ylim(1200, max(CMS_MonthlyHearingsInitialPlot$count)) + geom_lin
   ggtitle("Monthly Frequency of Initial Commitment Hearings Involving Adults, FY09-FY15") + theme(plot.title = element_text(size=12))
 ```
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+source("CMS_MC_Disposition_Initial_BAR_FY10-FY15.R")
+
+CMS_AnnualMCDispositionInitial_Plot + xlab("Fiscal Year") + ylab("Counts of Dispositions at Initial Hearings") + ggtitle("Frequencies of Dispositions at Initial Commitment Hearings Involving Adults, FY10-FY15") + theme(plot.title = element_text(size=10)) + scale_fill_hue(name="Disposition")
+
+```
+
 ##Recommitment Hearings
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("CMS_MC_RecommitmentHearings_Annual_FY09-F15_TABLE.R")
@@ -414,7 +422,7 @@ pander(CMS_AnnualCommitmentsInitial, caption  = "Annual Frequency of Commitment 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("CMS_MC_I_Annual_FY09-FY15_PLOT.R")
 
-CMS_Annual_Commitments_Plot + ylim(10000,15000) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of Involuntary Commitments Orders, FY10-FY15") + theme(plot.title = element_text(size=12))
+CMS_Annual_Commitments_Plot + ylim(10000,15000) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of Involuntary Commitment Orders, FY10-FY15") + theme(plot.title = element_text(size=12))
 
 ```
 
@@ -561,6 +569,13 @@ pander(CMS_MOT, caption= "MOT Types by Locality, FY09-FY15", keep.line.breaks = 
 # pander(CMS_MOT, caption= "MOT Types by Locality")
 ```
 
+##Judicial Authorizations of Treatment
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+source("CMS_OT_JAT_Annual_FY08-FY15_PLOT.R")
+
+CMS_OT_JAT_Annual_Plot + ylim(0,2000) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of Judicial Authorizations of Treatment Granted for Adults, FY10-FY15") + theme(plot.title = element_text(size=10))
+```
 
 ##Alternative Transportation Orders
 
