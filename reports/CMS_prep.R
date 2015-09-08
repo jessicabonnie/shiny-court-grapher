@@ -1,8 +1,14 @@
 ##################
 # Prepares Adult CMS table for use. Requires both CMS table and a FIPS Code table.
+<<<<<<< HEAD
 # Adds columns for :  FIPS codes, Locality Names, Hearing Months, Hearing Years, Fiscal Years
 #                     Fiscal Quarters, Month Abbreviations (factor sorted by fiscal order),
 #                     Initial/Recommitment Boolean
+=======
+# Adds columns for :  FIPS codes, Locality Names, Hearing Months, Hearing Years,
+#                     Fiscal Months, Fiscal Quarters, Month Abbreviations (factor sorted by fiscal order),
+#                     Initial/Recommitment Boolean,
+>>>>>>> 8eb84541df154df5ae57b1ee08f70ce331161245
 ##################
 
 
