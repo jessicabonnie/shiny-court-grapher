@@ -1,3 +1,11 @@
+##################
+# Prepares Adult CMS table for use. Requires both CMS table and a FIPS Code table.
+# Adds columns for :  FIPS codes, Locality Names, Hearing Months, Hearing Years, Fiscal Years
+#                     Fiscal Quarters, Month Abbreviations (factor sorted by fiscal order),
+#                     Initial/Recommitment Boolean
+##################
+
+
 library(stringr)
 library(lubridate)
 library(dplyr)
@@ -55,6 +63,6 @@ names(CMS)[names(CMS)=="NAME"] <- "Locality"
 CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
 CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
 
-# The first quarter of FY2009 (July, August, September) is incomplete, so it is removed from the dataset
+# The first quarter of FY2009 (July, August, September) is incomplete, so it is ALWAYS removed from the dataset
 
 CMS <- filter(CMS, !(FQtr == 1 & FYear==2009))

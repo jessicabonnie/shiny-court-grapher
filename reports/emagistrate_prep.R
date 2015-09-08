@@ -1,3 +1,9 @@
+##################
+# Prepares eMagistrate table for use.
+# Adds columns for :  FIPS codes, Fiscal Quarters, Fiscal Years
+##################
+
+
 library(stringr)
 
 emags <- read.csv("../data/ECOTDOFips08_14.txt")
