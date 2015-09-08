@@ -37,7 +37,13 @@ names(CMS_MOT_TOPFIPS) <- c("Locality", "FYear","Direct", "New\nHearing", "Disch
 CMS_MOT_TOPFIPS$Locality <- gsub("/","/\n",CMS_MOT_TOPFIPS$Locality)
 CMS_MOT_TOPFIPS$Locality <- gsub(" \\(","\n\\(",CMS_MOT_TOPFIPS$Locality)
 
-CMS_MOT_TOPFIPS <- filter(CMS_MOT_TOPFIPS, Locality %in% c("Fairfax County","Nottoway","Prince William","Staunton"))
+#this is totally dumb, but for now, in order to create the list of tops FIPS
+topFIPS <- 
+  group_by(CMS_MOT_TOPFIPS,Locality) %>%
+  summarise(sum=sum(Total)) %>%
+  filter(sum > 50)
+
+CMS_MOT_TOPFIPS <- filter(CMS_MOT_TOPFIPS, Locality %in% c(topFIPS$Locality))
 
 
 MOT_TopFIPS_Plot <-  ggplot(CMS_MOT_TOPFIPS, aes(x=FYear, y=Total,group=factor(Locality),color=factor(Locality))) + geom_line() + geom_point() + geom_text(size=3, aes(label=Total, hjust=0.5, vjust=2)) + ylab("Number of Orders for MOT (All Types)") +  xlab("Fiscal Year")
