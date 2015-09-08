@@ -1,6 +1,11 @@
-library(stringr)
-library(lubridate)
-library(pander)
+##################
+#
+# Draws Plot of Total Annual MOTs in all Localities with Total MOTS > 50.
+# X Axis: Fiscal Years
+# Y Axis: Total MOTs (All Types)
+# One Line per Locality
+#
+##################
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -9,8 +14,6 @@ library(ggplot2)
 
 #CMS <- read.csv("data/CMS_8_26.txt")
 #FIPS_Codes <- read.csv("/data/FIPS_R.csv")
-
-########### HERE'S THE MEAT #########
 
 
 CMS_MOT_TOPFIPS <- filter(CMS, CASE.TYP =="MC", HEAR.RSLT %in% c("MO", "I")) %>%
@@ -38,4 +41,4 @@ CMS_MOT_TOPFIPS <- filter(CMS_MOT_TOPFIPS, Locality %in% c("Fairfax County","Not
 
 
 MOT_TopFIPS_Plot <-  ggplot(CMS_MOT_TOPFIPS, aes(x=FYear, y=Total,group=factor(Locality),color=factor(Locality))) + geom_line() + geom_point() + geom_text(size=3, aes(label=Total, hjust=0.5, vjust=2)) + ylab("Number of Orders for MOT (All Types)") +  xlab("Fiscal Year")
-MOT_TopFIPS_Plot + ylim(0,75) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of MOT Orders (All Types) in Top FIPS, FY09-FY15")
+MOT_TopFIPS_Plot + ylim(0,max(CMS_MOT_TOPFIPS$Total)) + geom_line(size=1.2) + geom_point(aes(shape=factor(Locality)), size=3) + scale_colour_discrete(name  ="Locality") + scale_shape_discrete(name="Locality") + ggtitle("Annual Frequency of MOT Orders (All Types) in Top FIPS, FY09-FY15")
