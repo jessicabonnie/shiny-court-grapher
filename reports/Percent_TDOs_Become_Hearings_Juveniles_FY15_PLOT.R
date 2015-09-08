@@ -12,7 +12,7 @@ TDOJ<-filter(emags, Type=="TDOJ")
 
 TDOJmonthly <- 
   group_by(TDOJ, FYear, Month) %>%
-  summarise(Hearings = sum(Process.Count))
+  summarise(count = sum(Process.Count))
 
 TDOJJanJun15<- filter (TDOJmonthly, FYear==2015, Month < 7)
 
@@ -25,27 +25,18 @@ JCMSMonthly <-
   JCMS %>%
   filter(CASE_TYPE_CD=="MC") %>%
   group_by(MONTH_OF_FILING) %>%
-  summarise(Orders = n())
+  summarise(count2 = n())
 
 names(JCMSMonthly)[names(JCMSMonthly)=="MONTH_OF_FILING"] <- "Month"
 
 
 emagsJCMS <- merge(JCMSMonthly, TDOJJanJun15, by = c("Month"), all.x = TRUE)
 
-emagsJCMS<- gather(emagsJCMS, Type, number, Hearings, Orders)
-
-p <-  ggplot(emagsJCMS, aes(x=Month, y=number, fill=Type)) + geom_area(stat="identity", position="stack") + geom_line(aes(ymax=number), position="stack") + geom_text(size=3, aes(label=number, hjust=0.5, vjust=2, position="stack")) + xlab("Month") 
-+ 
-  
+emagsJCMS<- gather(emagsJCMS, Type, number, count, count2)
 
 
-#try2
-p <-  ggplot(emagsJCMS, aes(x=Month, y=number, fill=Type)) + geom_area(stat="identity", position="identity") + geom_line(aes(ymax=number)) + geom_text(size=3, aes(label=number, hjust=0.5, vjust=2)) + xlab("Month") + ylab("Count") +  scale_x_discrete(labels=c("Jan", "Feb", "Mar", "Apr", "May", "Jun"))
 
-p
+p <-  ggplot(emagsJCMS, aes(x=Month, y=number, fill=Type)) + geom_area(stat="identity", position="identity") + geom_line(aes(ymax=number)) + geom_text(size=3, aes(label=number, hjust=0.5, vjust=2)) + xlab("Month") + ylab("Count") +  scale_x_discrete(labels=c("Jan", "Feb", "Mar", "Apr", "May", "Jun")) +  scale_fill_discrete(labels=c("Orders", "Hearings"))
+
 
 p + theme(plot.title = element_text(size=10))+ ggtitle("Monthly Frequencies of TDOs and Commitment Hearings Involving Minors, 2015")
-
-
-
-         
