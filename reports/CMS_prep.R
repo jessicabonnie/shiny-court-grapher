@@ -60,8 +60,8 @@ CMS <- CMS[,!names(CMS) %in% c("SHORT_FIPS","COURT")]
 names(CMS)[names(CMS)=="NAME"] <- "Locality"
 
 #Use Pay Code to determine if Hearing is Initial
-CMS$initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
-CMS$initial [is.na(CMS$PAY.CD)] <- TRUE
+CMS$Initial <- ifelse (CMS$PAY.CD == 41 | CMS$PAY.CD == 46, FALSE, TRUE)
+CMS$Initial [is.na(CMS$PAY.CD)] <- TRUE
 
 # The first quarter of FY2009 (July, August, September) is incomplete, so it is ALWAYS removed from the dataset
 
