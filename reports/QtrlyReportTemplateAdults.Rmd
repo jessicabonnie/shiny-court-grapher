@@ -65,6 +65,10 @@ names(emagsECOAnnual)[names(emagsECOAnnual)=="count"] <- "# ECOs"
 pander(emagsECOAnnual, caption = "Annual Frequency of ECOs Issued for Adults, FY08-FY15")
 ```
 
+\newpage
+
+Figure 1
+
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 ECO <- 
   emags %>%
@@ -76,8 +80,12 @@ ECOyearly <-
 
 p <-  ggplot(ECOyearly, aes(x=FYear, y=count)) + geom_line() + geom_point() + geom_text(size=3, aes(label=count, hjust=0.5, vjust=2)) + ylab("Number of ECOs") +  xlab("Fiscal Year")
 
-p + ylim(0,max(ECOyearly$count)) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of ECOs Issued for Adults, FY08-FY15") + theme(plot.title = element_text(size=12))
+p + ylim(4000,max(ECOyearly$count)) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of ECOs Issued for Adults, FY08-FY15") + theme(plot.title = element_text(size=12))
 ```
+
+\newpage
+
+Figure 2
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source ("ECO_Qtrly_FY08-FY15_PLOT.R")
@@ -85,6 +93,9 @@ source ("ECO_Qtrly_FY08-FY15_PLOT.R")
 ECOQuarterlyPlot + ylim(1200,max(ECOquarterly$count)) + geom_line(size=1.2) + scale_colour_discrete(name  ="Fiscal Year")+ geom_point(aes(shape=factor(FYear)), size=3) + scale_shape_discrete(name="Fiscal Year")+ ggtitle("Quarterly Frequency of ECOs Issued for Adults, FY08-FY15") + theme(plot.title = element_text(size=12))
 
 ```
+
+\newpage
+Figure 3
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("ECO_Qtrly_Long_FY08-FY15_PLOT.R")
@@ -107,6 +118,8 @@ emagsECOMonthly <-
 pander(emagsECOMonthly, caption = "Monthly Frequency of ECOs Issued for Adults, FY08-FY15", split.table = Inf)
 ```
 
+\newpage
+Figure 4
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 ECO <- 
@@ -162,6 +175,9 @@ pander(emagsTDOAnnual, caption = "Annual Frequency of TDOs Issued for Adults, FY
 
 ```
 
+\newpage
+
+Figure 5
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 TDO <- 
@@ -179,10 +195,14 @@ TDOyearly <-
 
 p <-  ggplot(TDOyearly, aes(x=FYear, y=count)) + geom_line() + geom_point() + geom_text(size=3, aes(label=count, hjust=0.5, vjust=2.5)) + ylab("Number of TDOs") +  xlab("Fiscal Year")
 
-p + ylim(1250,max(TDOyearly$count)) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of TDOs Issued for Adults, FY08-FY15") + theme(plot.title = element_text(size=12))
+p + ylim(15000,max(TDOyearly$count)) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of TDOs Issued for Adults, FY08-FY15") + theme(plot.title = element_text(size=12))
 
 
 ```
+
+\newpage
+
+Figure 6
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source ("TDO_Qtrly_FY08_FY15_PLOT.R")
@@ -190,6 +210,9 @@ source ("TDO_Qtrly_FY08_FY15_PLOT.R")
 TDOQuarterlyPlot + ylim(4000,max(TDOquarterly$count)) + geom_line(size=1.2) + scale_colour_discrete(name  ="Fiscal Year")+ geom_point(aes(shape=factor(FYear)), size=3) + scale_shape_discrete(name="Fiscal Year")+ ggtitle("Quarterly Frequency of TDOs Issued for Adults, FY08-FY15") + theme(plot.title = element_text(size=12))
 ```
 
+\newpage
+
+Figure 7
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("TDO_Qtrly_Long_FY08-FY15_PLOT.R")
@@ -224,6 +247,9 @@ pander(emags2, caption = "Monthly Frequency of TDOs Issued for Adults, FY08-FY15
 
 ```
 
+\newpage
+
+Figure 8
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -257,11 +283,54 @@ p + ylim(1200,max(TDOmonthly2$count)) + geom_line(size=1.2) +
 
 ##Initial Commitment Hearings
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+source("CMS_MC_CommitmentHearings_Annual_FY09-F15_TABLE.R")
+
+pander(CMS_Annual_Initial_Hearings, caption  = "Annual Frequency of Initial Commitment Hearings Involving Adults, FY10-FY15", split.table = Inf)
+
+
+```
+
+\newpage
+
+Figure 9
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+source("CMS_MC_Initial_Annual_FY09-FY15_PLOT.R")
+
+CMS_Annual_Hearings_Plot + ylim(19000,23000) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of Initial Commitment Hearings Involving Adults, FY010-FY15") + theme(plot.title = element_text(size=11))
+
+
+```
+
+\newpage
+
+Figure 10
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source ("CMS_MC_CommitmentHearings_Qtrly_Long_FY09-FY15_PLOT.R")
+
+CMS_MC_Qtrly_Long_Plot + ylim(3400,max(CMS_MC_Qtrly_Long$count)) + geom_line(size=1.2) + ggtitle("Quarterly Initial Commitment Hearing Trends (Adults Only), FY09-FY15") + scale_x_discrete(labels=c("09-2", "09-3", "09-4", "10-1", "10-2", "10-3", "10-4", "11-1", "11-2", "11-3", "11-4", "12-1", "12-2", "12-3", "12-4", "13-1", "13-2", "13-3", "13-4", "14-1", "14-2", "14-3", "14-4", "15-1", "15-2","15-3", "15-4")) + theme(axis.text.x = element_text(angle=90)) + theme(plot.title = element_text(size=12))
+
+```
+
+\newpage
+
+Figure 11
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("CMS_MC_CommitmentHearings_Qtrly_FY09-FY15_PLOT.R")
+CMS_QtrlyCommitmentHearingsInitialPlot + ylim(4000,max(CMS_QtrlyCommitmentHearingsInitial$count)) + geom_line(size=1.2) + scale_colour_discrete(name  ="Fiscal Year")+ geom_point(aes(shape=factor(FYear)), size=3) + scale_shape_discrete(name="Fiscal Year")+ ggtitle("Quarterly Frequency of Initial Commitment Hearings Involving Adults, FY09-FY15") +  theme(plot.title = element_text(size=11))
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(stringr)
 library(lubridate)
 library(dplyr)
 
-source("CMS_prep.R")
+#source("CMS_prep.R")
 #CMS <- read.csv("../data/CMS_8_26.txt")
 #FIPS_Codes <- read.csv("../data/FIPS_R.csv")
 
@@ -331,9 +400,12 @@ CMS_MonthlyHearingsInitial <-
 
 names(CMS_MonthlyHearingsInitial)[names(CMS_MonthlyHearingsInitial)=="FYMonthAbbrev"] <- "Month"
 
-pander(CMS_MonthlyHearingsInitial, caption  = "Monthly Frequency of Initial Commitment Hearings for Adults, FY09-FY15", split.table = Inf)
+pander(CMS_MonthlyHearingsInitial, caption  = "Monthly Frequency of Initial Commitment Hearings Involving Adults, FY09-FY15", split.table = Inf)
 ```
 
+\newpage
+
+Figure 12
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -352,12 +424,16 @@ CMS_MonthlyHearingsInitialPlot <-
 MCInitialplot <- 
   ggplot(CMS_MonthlyHearingsInitialPlot, aes(factor(FYMonthAbbrev), count,  group=factor(FYear), color=factor(FYear))) + 
   geom_line() +
-  ylab("Number of Commitment Hearings") +
+  ylab("Number of Initial Commitment Hearings") +
   xlab("Month")
 
 MCInitialplot + ylim(1200, max(CMS_MonthlyHearingsInitialPlot$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year") + 
   ggtitle("Monthly Frequency of Initial Commitment Hearings Involving Adults, FY09-FY15") + theme(plot.title = element_text(size=12))
 ```
+
+\newpage
+
+Figure 13
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -367,6 +443,65 @@ CMS_AnnualMCDispositionInitial_Plot + xlab("Fiscal Year") + ylab("Counts of Disp
 
 ```
 
+
+##Involuntary Commitment Orders
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("CMS_MC_I_Annual_FY09-FY15_TABLE.R")
+pander(CMS_AnnualCommitmentsInitial, caption  = "Annual Frequency of Commitment Orders for Adults (Initial Only), FY10-FY15", split.table = Inf)
+
+```
+
+\newpage
+
+Figure 14
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("CMS_MC_I_Annual_FY09-FY15_PLOT.R")
+
+CMS_Annual_Commitments_Plot + ylim(10000,15000) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of Involuntary Commitment Orders, FY10-FY15") + theme(plot.title = element_text(size=12))
+
+```
+
+\newpage
+
+Figure 15
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+source("CMS_MC_I_Qtrly_FY09-FY15_PLOT.R")
+
+CMS_QtrlyCommitmentsInitialPlot + ylim(2500,max(CMS_QtrlyCommitmentsInitial$count)) + geom_line(size=1.2) + scale_colour_discrete(name  ="Fiscal Year") + geom_point(aes(shape=factor(FYear)), size=3) + scale_shape_discrete(name="Fiscal Year")+ ggtitle("Quarterly Frequency of Commitment Orders Issued for Adults, FY09-FY15") + theme(plot.title = element_text(size=12))
+
+
+```
+
+\newpage
+Figure 16
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("CMS_MC_I_Qtrly_Long_FY09-FY15_PLOT.R")
+
+CMS_Qtrly_Long_Plot + ylim(2400,max(CMS_Qtrly_Long$count)) + geom_line(size=1.2) + ggtitle("Quarterly Involuntary Commitment Order Trends (Adults Only), FY09-FY15") + scale_x_discrete(labels=c("09-2", "09-3", "09-4", "10-1", "10-2", "10-3", "10-4", "11-1", "11-2", "11-3", "11-4", "12-1", "12-2", "12-3", "12-4", "13-1", "13-2", "13-3", "13-4", "14-1", "14-2", "14-3", "14-4", "15-1", "15-2","15-3", "15-4")) + theme(axis.text.x = element_text(angle=90)) + theme(plot.title = element_text(size=12))
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source ("CMS_MC_I_Monthly_FY09-FY15_TABLE.R")
+pander(CMS_MonthlyCommitmentsInitial, caption  = "Monthly Frequency of Commitment Orders for Adults (Initial Only), FY09-FY15", split.table = Inf)
+
+```
+
+\newpage
+Figure 17
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("CMS_MC_I_Monthly_FY09-FY15_PLOT.R")
+MC_Iplot + ylim(600, max(CMS_MonthlyCommitmentsPlot$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year") + 
+  ggtitle("Monthly Frequency of Involuntary Commitment Orders for Adults (Initial Only), FY09-FY15") + theme(plot.title = element_text(size=10))
+
+```
+
+
 ##Recommitment Hearings
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("CMS_MC_RecommitmentHearings_Annual_FY09-F15_TABLE.R")
@@ -374,6 +509,9 @@ source("CMS_MC_RecommitmentHearings_Annual_FY09-F15_TABLE.R")
 pander(CMS_Annual_Recommitment_Hearings, caption  = "Annual Frequency of Recommitment Hearings for Adults, FY10-FY15", split.table = Inf)
 
 ```
+
+\newpage
+Figure 18
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("CMS_MC_RecommitmentHearings_Annual_FY09-F15.R")
@@ -399,6 +537,8 @@ names(CMS_MonthlyHearingsRecommit)[names(CMS_MonthlyHearingsRecommit)=="FYMonthA
 pander(CMS_MonthlyHearingsRecommit, caption  = "Monthly Frequency of Recommitment Hearings for Adults, FY09-FY15", split.table = Inf)
 ```
 
+\newpage
+Figure 19
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(dplyr)
@@ -422,55 +562,21 @@ MCRecommitplot + ylim(0, max(CMS_MonthlyHearingsRecommitPlot$count)) + geom_line
   ggtitle("Monthly Frequency of Recommitment Hearings Involving Adults, FY09-FY15") + theme(plot.title = element_text(size=12))
 ```
 
-##Involuntary Commitment Orders
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-source("CMS_MC_I_Annual_FY09-FY15_TABLE.R")
-pander(CMS_AnnualCommitmentsInitial, caption  = "Annual Frequency of Commitment Orders for Adults (Initial Only), FY10-FY15", split.table = Inf)
-
-```
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-source("CMS_MC_I_Annual_FY09-FY15_PLOT.R")
-
-CMS_Annual_Commitments_Plot + ylim(10000,15000) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of Involuntary Commitment Orders, FY10-FY15") + theme(plot.title = element_text(size=12))
-
-```
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-
-source("CMS_MC_I_Qtrly_FY09-FY15_PLOT.R")
-
-CMS_QtrlyCommitmentsInitialPlot + ylim(2500,max(CMS_QtrlyCommitmentsInitial$count)) + geom_line(size=1.2) + scale_colour_discrete(name  ="Fiscal Year") + geom_point(aes(shape=factor(FYear)), size=3) + scale_shape_discrete(name="Fiscal Year")+ ggtitle("Quarterly Frequency of Commitment Orders Issued for Adults, FY09-FY15") + theme(plot.title = element_text(size=12))
-
-
-```
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-source("CMS_MC_I_Qtrly_Long_FY09-FY15_PLOT.R")
-
-CMS_Qtrly_Long_Plot + ylim(2400,max(CMS_Qtrly_Long$count)) + geom_line(size=1.2) + ggtitle("Quarterly Involuntary Commitment Order Trends (Adults Only), FY09-FY15") + scale_x_discrete(labels=c("09-2", "09-3", "09-4", "10-1", "10-2", "10-3", "10-4", "11-1", "11-2", "11-3", "11-4", "12-1", "12-2", "12-3", "12-4", "13-1", "13-2", "13-3", "13-4", "14-1", "14-2", "14-3", "14-4", "15-1", "15-2","15-3", "15-4")) + theme(axis.text.x = element_text(angle=90)) + theme(plot.title = element_text(size=12))
-```
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-source ("CMS_MC_I_Monthly_FY09-FY15_TABLE.R")
-pander(CMS_MonthlyCommitmentsInitial, caption  = "Monthly Frequency of Commitment Orders for Adults (Initial Only), FY09-FY15", split.table = Inf)
-
-```
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-source("CMS_MC_I_Monthly_FY09-FY15_PLOT.R")
-MC_Iplot + ylim(600, max(CMS_MonthlyCommitmentsPlot$count)) + geom_line(size=1.2) + geom_point(aes(shape=factor(FYear)), size=3) + scale_colour_discrete(name  ="Fiscal Year") + scale_shape_discrete(name="Fiscal Year") + 
-  ggtitle("Monthly Frequency of Involuntary Commitment Orders for Adults (Initial Only), FY09-FY15") + theme(plot.title = element_text(size=10))
-
-```
+\newpage
 
 ##Mandatory Outpatient Treatment
+
+Figure 20
+
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("CMS_MOT_Annual_Tot_FY09-FY15_Plot.R")
 MOT_Annual_Plot + ylim(0,350) + geom_line(size=1.2) + geom_point(size=3.5)+ ggtitle("Annual Frequency of MOT Orders (All Types), FY09-FY15") + theme(plot.title = element_text(size=12))
 
 ```
+
+\newpage
+
+Figure 21
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("CMS_MOT_Qtrly_Tot_FY09-FY15_PLOT.R")
@@ -485,6 +591,9 @@ pander(CMS_MOT_Annual, caption= "Fiscal Year MOT Counts by Type", keep.line.brea
 
 ```
 
+\newpage
+
+Figure 22
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("CMS_MOT_Type_Qtrly_FY09-FY15_PLOT.R")
@@ -495,6 +604,7 @@ MOT_Type_Qtrly_Plot + ylim(0,85) + geom_line(size=1.2) + geom_point(aes(shape=fa
 
 
 ```
+
 \newpage
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -596,6 +706,9 @@ pander(CMS_MOT, caption= "MOT Types by Locality, FY09-FY15", keep.line.breaks = 
 ```
 
 ##Judicial Authorizations of Treatment
+
+Figure 23
+
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
 source("CMS_OT_JAT_Annual_FY08-FY15_PLOT.R")
@@ -629,13 +742,15 @@ pander(ATO_Tot, caption = "Annual Frequency of ATOs Issued for Adults, by Order 
 
 ```
 
+\newpage
+
+Figure 24
+
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
 source("ATO_Qtrly_Long_FY10-FY15_PLOT.R")
 ATO_Annual_Plot + ylim(0,60) + geom_line(size=1.2) + ggtitle("Quarterly ATO Trends (Adults Only), FY10-FY15") + scale_x_discrete(labels=c("10-1", "10-2", "10-3", "10-4", "11-1", "11-2", "11-3", "11-4", "12-1", "12-2", "12-3", "12-4", "13-1", "13-2", "13-3", "13-4", "14-1", "14-2", "14-3", "14-4", "15-1", "15-2","15-3", "15-4")) + theme(axis.text.x = element_text(angle=90)) + theme(plot.title = element_text(size=12))
 ```
-
-\newpage
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 

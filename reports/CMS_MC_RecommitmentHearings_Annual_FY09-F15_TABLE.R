@@ -1,5 +1,5 @@
 ##################
-# Draws annual table of Adult Mental Commitment Orders from CMS data
+# Draws annual table of Adult Mental Recommitment Hearings from CMS data
 ##################
 #source("reports/CMS_prep.R")
 
@@ -15,6 +15,6 @@ CMS_Annual_Recommitment_Hearings <-
   summarise(count = n())
 
 names(CMS_Annual_Recommitment_Hearings)[names(CMS_Annual_Recommitment_Hearings)=="FYear"] <- "Fiscal Year"
-names(CMS_Annual_Recommitment_Hearings)[names(CMS_Annual_Recommitment_Hearings)=="count"] <- "# Recommitment Orders"
+names(CMS_Annual_Recommitment_Hearings)[names(CMS_Annual_Recommitment_Hearings)=="count"] <- "# Recommitment Hearings"
 
-pander(CMS_Annual_Recommitment_Hearings, caption  = "Annual Frequency of Recommitment Hearings for Adults, FY10-FY15", split.table = Inf)
+#pander(CMS_Annual_Recommitment_Hearings, caption  = "Annual Frequency of Recommitment Hearings Involving Adults, FY10-FY15", split.table = Inf) + theme(plot.title = element_text(size=12))
