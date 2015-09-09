@@ -1,0 +1,41 @@
+OBJECTID,CSBName,Population,FID
+1,Planning District One,"93,195",0
+2,Dickenson County,"15,741",1
+3,Highlands,"72,633",2
+4,Cumberland Mountain,"97,044",3
+5,Mount Rogers,"121,366",4
+6,New River Valley,"182,757",5
+7,Piedmont,"142,525",6
+8,Blue Ridge Behavioral Healthcare,"257,015",7
+9,Danville-Pittsylvania,"106,520",8
+10,Southside,"85,465",9
+11,District 19,"174,761",10
+12,Western Tidewater,"153,101",11
+13,Chesapeake,"235,638",12
+14,Virginia Beach,"451,672",13
+15,Portsmouth,"96,802",14
+16,Norfolk,"246,394",15
+17,Hampton-Newport News,"321,907",16
+18,Eastern Shore,"46,077",17
+19,Colonial Behavioral Health,"165,812",18
+20,Henrico,"345,432",19
+21,Hanover,"102,714",20
+22,Chesterfield,"330,043",21
+23,Goochland-Powhatan,"50,409",22
+24,Crossroads,"104,787",23
+25,Horizon Behavioral Health,"259,487",24
+26,Alleghany Highlands,"22,142",25
+27,Rockbridge Area,"41,357",26
+28,Valley,"123,247",27
+29,Region Ten,"246,469",28
+30,Rappahannock Area,"347,246",29
+31,Middle Peninsula-Northern Neck,"142,457",30
+32,Rappahannock-Rapidan,"171,341",31
+33,Prince William,"494,893",32
+34,Fairfax-Falls Church,"1,157,136",33
+35,Alexandria,"155,230",34
+36,Arlington County,"229,302",35
+37,Loudon County,"361,708",36
+38,Northwestern,"229,395",37
+39,Harrisonburg-Rockingham,"131,565",38
+40,Richmond,"213,504",39
