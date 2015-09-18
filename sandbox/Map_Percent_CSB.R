@@ -9,13 +9,15 @@ library(dplyr)
 library(maptools)
 library(ggthemes)
 library(gpclib)
+library(tidyr)
 
 # fix for gpc error
 gpclibPermit()
 
 
-source("reports/CMS_prep.R")
 CSB <- read.csv("resources/CSB_FIPS_GIS.csv")
+CSB_FID <- read.csv("resources/gis_joinfile.csv")
+
 CSB$FIPS <- paste0(str_pad(as.character(CSB$FIPS), 3, side="left", pad="0"),"G")
 
 
@@ -30,6 +32,18 @@ CMS_Invol <-
   mutate(pct=(100*n)/sum(n)) %>%
   select(-n)%>%
   spread(HEAR.RSLT,pct,fill = 0)
+
+#this is almost what I want but I want to be able to fill in the FIDs as
+CMS_Invol_fill <- expand.grid(CSBName=unique(CMS_Invol$CSBName), FYear=unique(CMS_Invol$FYear)) 
+
+  CMS_Invol_fill2 <- left_join(x=CMS_Invol_fill, y= CSB_FID[ , c("CSBName", "FID")], by=c("CSBName"))
+  CMS_Invol_fill3<- left_join(x=CMS_Invol_fill2, y=CMS_Invol, by=c("CSBName", "FYear"))
+
+  CMS_Invol <- select(CMS_Invol_fill3, -FID.y)
+  
+# use something like this to fill all the NAs with 0.
+CMS[is.na(CMS_MOT_Annual)] <- 0
+
 
 CMS_Invol$FID<- as.character(CMS_Invol$FID)
 CMS_InvolFY15<- filter(CMS_Invol, FYear==2015)
