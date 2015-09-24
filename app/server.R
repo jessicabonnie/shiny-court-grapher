@@ -1,16 +1,15 @@
 library(shiny)
 
 source("prep.R")
-
 shinyServer(function(input, output) {
-        
+ 
+  
+  
+         
         output$map <- renderPlot({
                 
-                ggplot(csb.df) + 
-                        aes(long,lat,group=group) + 
-                        geom_polygon() +
-                        geom_path(color="white") +
-                        theme_nothing(legend=TRUE) 
+                map_plot(input$FYear, input$disposition)
+          
         })
         
         output$summary <- renderText({
