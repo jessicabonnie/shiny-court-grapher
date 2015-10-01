@@ -17,7 +17,7 @@ gpclibPermit()
 
 
 # read in case management system data
-source("CMS_prep.R")
+# source("CMS_prep.R")
 
 CSB <- read.csv("../resources/CSB_FIPS_GIS.csv")
 CSB_FID <- read.csv("../resources/gis_joinfile.csv")
