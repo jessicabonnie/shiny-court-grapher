@@ -96,7 +96,7 @@ map_plot <- function (fy, dispos){
 #print(filter(plot_invol, CSBName == "Southside"))
 print(dispos)
   ggplot(plot_invol, aes_string(x="long",y="lat",group="group",fill=dispos)) + 
-    geom_polygon() + geom_path(color="white") 
+    geom_polygon() + geom_path(color="white") + theme_nothin(legend=TRUE)
 }
 
 
@@ -118,5 +118,5 @@ map_plot_test <- function (thing){
   #print(filter(plot_invol, CSBName == "Southside"))
   
   ggplot(plot_invol, aes(x=long,y=lat,group=group,fill=as.factor(id))) + 
-    geom_polygon() + geom_path(color="white") + geom_polygon(data=filter(plot_invol, id == thing), color="black")
+    geom_polygon() + geom_path(color="white") + geom_polygon(data=filter(plot_invol, id == thing), color="black") + theme_nothing(legend=TRUE)
 }
