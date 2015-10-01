@@ -96,7 +96,7 @@ map_plot <- function (fy, dispos){
 #print(filter(plot_invol, CSBName == "Southside"))
 print(dispos)
   ggplot(plot_invol, aes_string(x="long",y="lat",group="group",fill=dispos)) + 
-    geom_polygon() + geom_path(color="white") + theme_nothin(legend=TRUE)
+    geom_polygon() + geom_path(color="white") + theme_nothing(legend=TRUE)
 }
 
 
