@@ -14,11 +14,11 @@ shinyUI(navbarPage("ILPPP",
                                              "Voluntary" = "V",
                                              "Mandatory Outpatient Treatment" = "MO",
                                              "Dismissed" = "D"),
-                                           selected="I"),
-                              selectInput(inputId = "outcome",
-                                          label = "Outcome",
-                                          choices = c("Percent Mandatory", "Percent Voluntary",
-                                                      "Percent ..."))
+                                           selected="I")
+                            #  selectInput(inputId = "outcome",
+                             #             label = "Outcome",
+                              #            choices = c("Percent Mandatory", "Percent Voluntary",
+                               #                       "Percent ..."))
                             
                               
                               ),

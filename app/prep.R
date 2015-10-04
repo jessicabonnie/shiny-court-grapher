@@ -17,7 +17,9 @@ gpclibPermit()
 
 
 # read in case management system data
-# source("CMS_prep.R")
+
+
+source("CMS_prep.R")
 
 CSB <- read.csv("../resources/CSB_FIPS_GIS.csv")
 CSB_FID <- read.csv("../resources/gis_joinfile.csv")
@@ -52,14 +54,14 @@ scaff <- expand.grid(CSBName=unique(cmsinvol$CSBName),
 
 scaff <- merge(x=scaff, y=CSB_FID[,c("CSBName","FID")], by=c("CSBName"),all.x=TRUE,all.Y=F)
 scaff$FID <-as.numeric(scaff$FID)
-cmsinvol <- left_join(x=scaff, y=cmsinvol, by=c("CSBName","FID","FYear","HEAR.RSLT"))
+cmsinvol <- full_join(x=scaff, y=cmsinvol, by=c("CSBName","FID","FYear","HEAR.RSLT"))
 cmsinvol[is.na(cmsinvol)]<-0
 
 cmsinvol <- cmsinvol%>%
   group_by(CSBName, FID, FYear) %>%
   mutate(pct=(100*n)/sum(n)) %>%
   select(-n) %>%
-  spread(HEAR.RSLT,pct,fill = 0)
+  spread(HEAR.RSLT,pct)
 
 
 csb_scaffold <- expand.grid(CSBName=unique(CMS_Invol$CSBName), FYear=unique(CMS_Invol$FYear)) 
@@ -95,8 +97,22 @@ map_plot <- function (fy, dispos){
   plot_invol <- right_join(csb.points, csb@data, by="id")
 #print(filter(plot_invol, CSBName == "Southside"))
 print(dispos)
-  ggplot(plot_invol, aes_string(x="long",y="lat",group="group",fill=dispos)) + 
-    geom_polygon() + geom_path(color="white") + theme_nothing(legend=TRUE)
+#  ggplot(plot_invol, aes_string(x="long",y="lat",group="group",fill=dispos)) + 
+#    geom_polygon() + geom_path(color="white") + theme_nothing(legend=TRUE)
+#^Pete's method of making a blank theme
+
+# if (dispos == "I"){
+#   legendtitle <- "% Involuntary"
+# }else{
+#   if (dispos == )
+# }
+plot_disp <- ggplot(plot_invol, aes_string(x="long",y="lat",group="group",fill=dispos)) + 
+    geom_polygon() + geom_path(color="black") +
+    scale_fill_gradientn(name="", colours=brewer.pal(n=5, name="YlGnBu")) + 
+   theme_map() + theme(legend.position="right")
+#+ scale_fill_gradientn(name="Involuntary", colours=brewer.pal(n=5, name="YlGnBu"))
+plot_disp
+
 }
 
 
@@ -104,19 +120,17 @@ print(dispos)
 # For testing
 
 
-map_plot_test <- function (thing){
-  csbtest <- csb_intake
-  sub_cms_invol <- filter(CMS_Invol, FYear == 2014)
-  csbtest@data <- merge(csbtest@data,sub_cms_invol,
+map_plot_test <- function (fy, dispos){
+  csb <- csb_intake
+  sub_cms_invol <- filter(CMS_Invol, FYear == fy)
+  csb@data <- merge(csb@data,sub_cms_invol,
                     all.x=T,by.x=c("id"),by.y=c("FID"))
-  csbtest@data <- select(csbtest@data, -CSB_Name, -Percent_Ve, -Number_Vet, -NumberEval, -HPR)
+  csb@data <- select(csb@data, -CSB_Name, -Percent_Ve,
+                     -Number_Vet, -NumberEval, -HPR)
   
   # create dataframe so ggplot can do its thing
-  csbtest.points <- fortify(csbtest, region="id")
-  csbtest.points$id <- as.numeric(csbtest.points$id)
-  plot_invol <- right_join(csbtest.points, csbtest@data, by="id")
-  #print(filter(plot_invol, CSBName == "Southside"))
+  csb.points <- fortify(csb, region="id")
+  csb.points$id <- as.numeric(csb.points$id)
   
-  ggplot(plot_invol, aes(x=long,y=lat,group=group,fill=as.factor(id))) + 
-    geom_polygon() + geom_path(color="white") + geom_polygon(data=filter(plot_invol, id == thing), color="black") + theme_nothing(legend=TRUE)
+
 }
