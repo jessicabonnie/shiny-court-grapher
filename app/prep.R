@@ -85,7 +85,7 @@ get_legend_title <- function(disp){
   if (disp == "I"){return("% Involuntary")}
   if (disp == "V"){return("% Voluntary")}
   if (disp == "D"){return("% Dismissed")}
-  if (disp == "MO"){return("% Mandatory Outpatient \nTreatment")}
+  if (disp == "MO"){return("% Mandatory \nOutpatient \nTreatment")}
   
 }
 
