@@ -1,8 +1,9 @@
 library(shiny)
 
-shinyUI(navbarPage("ILPPP",
+shinyUI(fluidPage(verticalLayout(fluid=TRUE,navbarPage("ILPPP",
                    tabPanel("Home",
-                            sidebarPanel(
+                            mainPanel(
+                              htmlOutput("description"),
                               sliderInput("FYear",
                                           "Fiscal Year:",
                                           min = 2010,
@@ -15,10 +16,7 @@ shinyUI(navbarPage("ILPPP",
                                              "Mandatory Outpatient Treatment" = "MO",
                                              "Dismissed" = "D"),
                                            selected="I")
-                            #  selectInput(inputId = "outcome",
-                             #             label = "Outcome",
-                              #            choices = c("Percent Mandatory", "Percent Voluntary",
-                               #                       "Percent ..."))
+
                             
                               
                               ),
@@ -26,10 +24,13 @@ shinyUI(navbarPage("ILPPP",
                             
                             mainPanel(
                                     plotOutput("map")
-                            )
+                            ),
+                            mainPanel(dataTableOutput(outputId="table"))
                    ),
                    tabPanel("About",
                             htmlOutput("summary")
                    )
+)
+)
 )
 )

@@ -12,6 +12,8 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(RColorBrewer)
+library(grid)
+library(pander)
 
 # fix for gpc error
 gpclibPermit()
@@ -20,7 +22,7 @@ gpclibPermit()
 # read in case management system data
 
 
-source("CMS_prep.R")
+#source("CMS_prep.R")
 
 CSB <- read.csv("../resources/CSB_FIPS_GIS.csv")
 CSB_FID <- read.csv("../resources/gis_joinfile.csv")
@@ -108,15 +110,13 @@ print(dispos)
 #    geom_polygon() + geom_path(color="white") + theme_nothing(legend=TRUE)
 #^Pete's method of making a blank theme
 
-# if (dispos == "I"){
-#   legendtitle <- "% Involuntary"
-# }else{
-#   if (dispos == )
-# }
+
 plot_disp <- ggplot(plot_invol, aes_string(x="long",y="lat",group="group",fill=dispos)) + 
     geom_polygon() + geom_path(color="black") +
-    scale_fill_gradientn(name=get_legend_title(dispos), colours=brewer.pal(n=5, name="YlGnBu")) + 
-   theme_map() + theme(legend.position="right")
+    scale_fill_gradientn(name=get_legend_title(dispos), 
+                         colours=brewer.pal(n=5, name="YlGnBu")) + 
+   theme_map() + theme(legend.position="right",legend.title=element_text(size=14,face="bold"),
+                       legend.text=element_text(size=12), legend.key.height=unit(1,"cm"))
 #+ scale_fill_gradientn(name="Involuntary", colours=brewer.pal(n=5, name="YlGnBu"))
 plot_disp
 
