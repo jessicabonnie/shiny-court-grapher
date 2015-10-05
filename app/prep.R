@@ -11,6 +11,7 @@ library(ggmap)
 library(dplyr)
 library(tidyr)
 library(stringr)
+library(RColorBrewer)
 
 # fix for gpc error
 gpclibPermit()
@@ -78,7 +79,13 @@ csb_intake <- spTransform(csb_intake, CRS("+proj=longlat +datum=WGS84"))
 csb_intake@data$id <- as.numeric(rownames(csb_intake@data))
 
 
-
+get_legend_title <- function(disp){
+  if (disp == "I"){return("% Involuntary")}
+  if (disp == "V"){return("% Voluntary")}
+  if (disp == "D"){return("% Dismissed")}
+  if (disp == "MO"){return("% Mandatory Outpatient \nTreatment")}
+  
+}
 
 
 
@@ -108,7 +115,7 @@ print(dispos)
 # }
 plot_disp <- ggplot(plot_invol, aes_string(x="long",y="lat",group="group",fill=dispos)) + 
     geom_polygon() + geom_path(color="black") +
-    scale_fill_gradientn(name="", colours=brewer.pal(n=5, name="YlGnBu")) + 
+    scale_fill_gradientn(name=get_legend_title(dispos), colours=brewer.pal(n=5, name="YlGnBu")) + 
    theme_map() + theme(legend.position="right")
 #+ scale_fill_gradientn(name="Involuntary", colours=brewer.pal(n=5, name="YlGnBu"))
 plot_disp
